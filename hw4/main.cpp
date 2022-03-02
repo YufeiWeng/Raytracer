@@ -35,10 +35,10 @@ int main() {
     const int image_height = 480;
 
     // Camera
-    glm::vec3 eye(0.0, 0.0, 1.0); //0 for now 
-    glm::vec3 center(0.0, 0.0, 0.0);
+    glm::vec3 eye(-4, -4, 4); //0 for now 
+    glm::vec3 center(0.0, 1.0, 0.0);
     float fovy(45);
-    glm::vec3 up(0.0, 1.0, 0.0);
+    glm::vec3 up(1.0, 0.0, 0.0);
 
 
     //uwv
@@ -57,7 +57,7 @@ int main() {
             float beta = tan(fovy / 2) * ((image_height / 2 - i) / (image_height / 2));
             glm::vec3 direction = normalize(alpha * u + beta * v - w);
             Ray ray(eye, direction);
-            glm::vec3 color = hit_sphere(glm::vec3(0,0,0), .5, ray);
+            glm::vec3 color = hit_sphere(glm::vec3(0,0,0), 0.5, ray);
             cout << static_cast<int>(255.999 * color.x) << ' '
                 << static_cast<int>(255.999 * color.y) << ' '
                 << static_cast<int>(255.999 * color.z) << '\n';

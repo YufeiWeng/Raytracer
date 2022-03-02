@@ -8,8 +8,8 @@ public:
     glm::vec3 ori;
     glm::vec3 dir;
 public:
-    void at(double t) const;
-    Ray(const glm::vec3& origin, const glm::vec3& direction);
+    glm::vec3 at(double t) const;
+    Ray(const glm::vec3 origin, const glm::vec3 direction);
 };
 
 

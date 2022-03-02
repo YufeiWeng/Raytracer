@@ -1,13 +1,13 @@
 #include "Ray.h"
 
-Ray(const glm::vec3 &origin, const glm::vec3 &direction) {
+Ray::Ray(const glm::vec3 origin, const glm::vec3 direction) {
 	ori = origin;
 	dir = direction;
 }
 
 
-void at(double t) const {
-	return ori + t * dir;
+glm::vec3 Ray::at(double t) const {
+	return ori + float(t) * dir;
 }
 
 
