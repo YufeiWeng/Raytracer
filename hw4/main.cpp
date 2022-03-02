@@ -10,10 +10,10 @@ glm::vec3 hit_sphere(const glm::vec3& center, double radius, const Ray& ray ) {
     //at^2+bt+c=0
     //d=sqrt(b^2-4ac)
     //t=(-b+-d)/(2a)
-    auto a = glm::dot(ray.dir, ray.dir);
-    auto b = 2 * glm::dot(ray.dir, ray.ori - center);
-    auto c = glm::dot(ray.ori - center, ray.ori - center) - radius * radius;
-    auto d = b * b - 4 * a * c;
+    float a = glm::dot(ray.dir, ray.dir);
+    float b = 2 * glm::dot(ray.dir, ray.ori - center);
+    float c = glm::dot(ray.ori - center, ray.ori - center) - radius * radius;
+    float d = b * b - 4 * a * c;
     //two intersections
     if (d > 0) {
         //red for now
@@ -27,7 +27,7 @@ glm::vec3 hit_sphere(const glm::vec3& center, double radius, const Ray& ray ) {
 }
 
 
-int main() {
+int main(int argc, char* argv[]) {
 
     // Image
 
@@ -63,5 +63,6 @@ int main() {
                 << static_cast<int>(255.999 * color.z) << '\n';
         }
     }
+    return 0;
 }
 
