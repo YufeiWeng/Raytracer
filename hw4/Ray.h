@@ -1,15 +1,18 @@
+#include "variable.h"
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 using namespace std;
+
 
 class Ray {
 public:
-    glm::vec3 ori;
-    glm::vec3 dir;
+    vec3 ori;
+    vec3 dir;
+
 public:
-    glm::vec3 at(double t) const;
-    Ray(const glm::vec3 origin, const glm::vec3 direction);
+    vec3 at(double t) const;
+    Ray(int i, int j);
+
+    Ray(const vec3 origin, const vec3 direction);
 };
 
 

@@ -1,12 +1,22 @@
 #include "Ray.h"
-
-Ray::Ray(const glm::vec3 origin, const glm::vec3 direction) {
+Ray::Ray(const vec3 origin, const vec3 direction) {
 	ori = origin;
 	dir = direction;
 }
+   
+Ray::Ray(int i, int j){
+	vec3 u, w, v;
+    w = glm::normalize(eye-center);
+    u = glm::normalize(glm::cross(up, w));
+    v = glm::cross(w, u);
+    float alpha = tanf(glm::radians(fovx) / 2.0) * ((j - image_width / 2.0) / (image_width / 2.0));
+    float beta = tanf(glm::radians(fovy) / 2.0) * ((image_height / 2.0 - i) / (image_height / 2.0));
+	dir = normalize(alpha * u + beta * v - w);
+	ori = eye;
+}
 
 
-glm::vec3 Ray::at(double t) const {
+vec3 Ray::at(double t) const {
 	return ori + float(t) * dir;
 }
 
