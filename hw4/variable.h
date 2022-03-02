@@ -2,7 +2,13 @@
 #include <glm/gtc/matrix_transform.hpp>
 typedef glm::vec3 vec3;
 
-const int image_width = 640; //from test scene 
+#ifdef MAINPROGRAM 
+#define EXTERN 
+#else 
+#define EXTERN extern 
+#endif
+
+extern int image_width ; //from test scene 
 const int image_height = 480;
 const  float fovy(45);
 const float fovx = fovy * (image_width / (image_height *1.0));

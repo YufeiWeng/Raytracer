@@ -1,3 +1,5 @@
+
+#define MAINPROGRAM 
 #include "Ray.h"
 
 #include <iostream>
@@ -83,13 +85,12 @@ vec3 hit_sphere(const vec3& center, double radius, const Ray& ray ) {
 }
 
 
-
 int main(int argc, char* argv[]) {
 
     //uwv
 
     // Render
-
+    image_width=640;
     std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
     for (int i = 0; i < image_height; ++i) {
