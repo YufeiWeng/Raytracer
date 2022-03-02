@@ -33,8 +33,8 @@ int main(int argc, char* argv[]) {
 
     const int image_width = 640; //from test scene 
     const int image_height = 480;
-    const float ratio = image_width / image_height;
-
+    const float ratio = image_width / (image_height *1.0);
+    // cout<<ratio<<endl;
     // Camera
     glm::vec3 eye(-4, -4, 4); //0 for now 
     glm::vec3 center(0.0, 1.0, 0.0);
