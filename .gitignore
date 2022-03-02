@@ -369,3 +369,5 @@ hw4/glm-0.9.7.1
 hw4/*.o
 
 hw4/transforms
+
+hw4/*.ppm
