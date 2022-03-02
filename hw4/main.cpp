@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
 
     //uwv
     glm::vec3 u, w, v;
-    w = glm::normalize(eye);
+    w = glm::normalize(eye-center);
     u = glm::normalize(glm::cross(up, w));
     v = glm::cross(w, u);
 
