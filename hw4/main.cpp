@@ -66,20 +66,6 @@ vec3 hit_sphere(const vec3& center, double radius, const Ray& ray ) {
 
 int main(int argc, char* argv[]) {
 
-    // Image
-
-    const int image_width = 640; //from test scene 
-    const int image_height = 480;
-    const float ratio = image_width / image_height;
-
-    // Camera
-    glm::vec3 eye(-4, -4, 4); //0 for now 
-    glm::vec3 center(0.0, 1.0, 0.0);
-    float fovy(45);
-    float fovx= fovy * ratio;
-    glm::vec3 up(1.0, 0.0, 0.0);
-
-
     //uwv
 
     // Render
