@@ -6,9 +6,6 @@ using namespace std;
 class Ray {
 public:
     Ray() {}
-public:
-    glm::vec3 ori;
-    glm::vec3 dir;
 };
 
 
