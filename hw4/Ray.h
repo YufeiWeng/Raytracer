@@ -5,7 +5,11 @@ using namespace std;
 
 class Ray {
 public:
-    Ray() {}
+    glm::vec3 ori;
+    glm::vec3 dir;
+public:
+    void at(double t) const{}
+    Ray(const glm::vec3& origin, const glm::vec3& direction) {}
 };
 
 

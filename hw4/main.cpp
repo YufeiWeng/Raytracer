@@ -11,7 +11,7 @@ glm::vec3 hit_sphere(const glm::vec3& center, double radius, const Ray& ray ) {
     //d=sqrt(b^2-4ac)
     //t=(-b+-d)/(2a)
     auto a = glm::dot(ray.dir, ray.dir);
-    auto b = 2 * glm::dot(rat.dir, ray.ori - center);
+    auto b = 2 * glm::dot(ray.dir, ray.ori - center);
     auto c = glm::dot(ray.ori - center, ray.ori - center) - radius * radius;
     auto d = b * b - 4 * a * c;
     //two intersections
@@ -35,10 +35,10 @@ int main() {
     const int image_height = 480;
 
     // Camera
-    glm::vec3 eye(0.0, 0.0, 0.0); //0 for now 
+    glm::vec3 eye(0.0, 0.0, 1.0); //0 for now 
     glm::vec3 center(0.0, 0.0, 0.0);
-    float fovy(0);
-    glm::vec3 up(0.0, 0.0, 0.0);
+    float fovy(45);
+    glm::vec3 up(0.0, 1.0, 0.0);
 
 
     //uwv
@@ -56,7 +56,11 @@ int main() {
             float alpha = tan(fovy / 2) * ((j - image_width / 2) / (image_width / 2));
             float beta = tan(fovy / 2) * ((image_height / 2 - i) / (image_height / 2));
             glm::vec3 direction = normalize(alpha * u + beta * v - w);
-            Ray r(eye, direction);
+            Ray ray(eye, direction);
+            glm::vec3 color = hit_sphere(glm::vec3(0,0,0), .5, ray);
+            cout << static_cast<int>(255.999 * color.x) << ' '
+                << static_cast<int>(255.999 * color.y) << ' '
+                << static_cast<int>(255.999 * color.z) << '\n';
         }
     }
 }
