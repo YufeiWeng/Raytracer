@@ -11,9 +11,9 @@ glm::vec3 hit_sphere(const glm::vec3& center, double radius, const Ray& ray ) {
     //d=sqrt(b^2-4ac)
     //t=(-b+-d)/(2a)
     float a = glm::dot(ray.dir, ray.dir);
-    float b = 2 * glm::dot(ray.dir, ray.ori - center);
+    float b = 2.0 * glm::dot(ray.dir, ray.ori - center);
     float c = glm::dot(ray.ori - center, ray.ori - center) - radius * radius;
-    float d = b * b - 4 * a * c;
+    float d = b * b - 4.0 * a * c;
     //two intersections
     if (d > 0) {
         //red for now
@@ -33,11 +33,13 @@ int main(int argc, char* argv[]) {
 
     const int image_width = 640; //from test scene 
     const int image_height = 480;
+    const float ratio = image_width / image_height;
 
     // Camera
     glm::vec3 eye(-4, -4, 4); //0 for now 
     glm::vec3 center(0.0, 1.0, 0.0);
     float fovy(45);
+    float fovx= fovy * ratio;
     glm::vec3 up(1.0, 0.0, 0.0);
 
 
@@ -53,8 +55,8 @@ int main(int argc, char* argv[]) {
 
     for (int i = 0; i < image_height; ++i) {
         for (int j = 0; j < image_width; ++j) {
-            float alpha = tan(fovy / 2) * ((j - image_width / 2) / (image_width / 2));
-            float beta = tan(fovy / 2) * ((image_height / 2 - i) / (image_height / 2));
+            float alpha = tanf(glm::radians(fovx) / 2.0) * ((j - image_width / 2.0) / (image_width / 2.0));
+            float beta = tanf(glm::radians(fovy) / 2.0) * ((image_height / 2.0 - i) / (image_height / 2.0));
             glm::vec3 direction = normalize(alpha * u + beta * v - w);
             Ray ray(eye, direction);
             glm::vec3 color = hit_sphere(glm::vec3(0,0,0), 0.5, ray);
