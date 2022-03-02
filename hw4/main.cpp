@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
     // Camera
     glm::vec3 eye(-4, -4, 4); //0 for now 
     glm::vec3 center(0.0, 1.0, 0.0);
-    float fovy(45);
+    float fovy(30);
     float fovx= fovy * ratio;
     glm::vec3 up(1.0, 0.0, 0.0);
 
