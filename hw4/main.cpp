@@ -34,12 +34,32 @@ vec3 hit_triangle(const vec3 &vertexA,
     b = glm::dot(Bpnormal, P) + Bpw;
     c = glm::dot(Cpnormal, P) + Cpw;
     
-    if (a >= 0.0 && b >= 0.0 && c >= 0.0 && a + b + c == 1.0) {
-        return vec3(1.0, 0.0, 0.0);
-    }
-    else {
+    // if (a >= 0.0 && b >= 0.0 && c >= 0.0 && a + b + c == 1.0) {
+    //     return vec3(1.0, 0.0, 0.0);
+    // }
+    // else {
+    //     return vec3(0.0, 0.0, 0.0);
+    // }
+
+    if (a<0){
         return vec3(0.0, 0.0, 0.0);
     }
+    if (a>1){
+        return vec3(0.0, 0.0, 0.0);
+    }
+    if (b<0){
+        return vec3(0.0, 0.0, 0.0);
+    }
+    if (b>1){
+        return vec3(0.0, 0.0, 0.0);
+    }
+    if (c<0){
+        return vec3(0.0, 0.0, 0.0);
+    }
+    if (c>1){
+        return vec3(0.0, 0.0, 0.0);
+    }
+    return vec3(1.0,0.0,0.0);
 }
 
 vec3 hit_sphere(const vec3& center, double radius, const Ray& ray ) {
