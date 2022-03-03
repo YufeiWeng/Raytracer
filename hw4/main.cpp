@@ -74,7 +74,7 @@ vec3 hit_sphere(const vec3& center, double radius, const Ray& ray) {
     //two intersections
     if (d > 0) {
         //red for now
-        return vec3(1.0, 0.0, 0.0);
+        return vec3(0.0, 1.0, 0.0);
     }
     //one or none
     else {
@@ -106,12 +106,15 @@ int main(int argc, char* argv[]) {
                 if (obj[k]->_type == tri) {
                     triangle* tri = (triangle*)obj[k];// how to get tri
                     if (color == vec3(1.0, 0.0 ,0.0)) {
-
+                        break;
                     }
                     color = hit_triangle(tri->_A, tri->_B, tri->_C, ray);
                 }
                 else {
                     sphere* sph = (sphere*)obj[k];
+                    if (color == vec3(1.0, 0.0, 0.0)) {
+                        break;
+                    }
                     color = hit_sphere(sph->_center, sph->_radius, ray);
                 }
 
