@@ -1,11 +1,10 @@
 
 #define MAINPROGRAM 
 #include "Ray.h"
-
+#include "readfile.h"
 #include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>  //If there are redlines, go and check: https://www.google.com/search?q=how+to+include+glm+in+visual+studio+2019&ei=tbkeYuH6BZrHkPIPgMex2A0&ved=0ahUKEwihqa6plab2AhWaI0QIHYBjDNsQ4dUDCA4&uact=5&oq=how+to+include+glm+in+visual+studio+2019&gs_lcp=Cgdnd3Mtd2l6EAMyBQghEKsCOgcIABBHELADOgYIABAWEB46BQgAEIYDOgUIIRCgAUoECEEYAEoECEYYAFCyBVj-C2D3DmgBcAF4AYAB9AGIAYcGkgEFMC40LjGYAQCgAQHIAQjAAQE&sclient=gws-wiz#kpvalbx=_u7keYvz9FrefkPIPt8SO8Aw20
-using namespace std;
  
 
 vec3 hit_triangle(const vec3 &vertexA,
@@ -90,7 +89,9 @@ int main(int argc, char* argv[]) {
     //uwv
 
     // Render
- 
+    // cout<<argv[1]<<endl;
+
+    readfile(argv[1]);
     std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
     for (int i = 0; i < image_height; ++i) {

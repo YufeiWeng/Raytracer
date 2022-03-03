@@ -1,7 +1,6 @@
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <vector>
-typedef glm::vec3 vec3;
+
+
+#include "object.h"
 
 #ifdef MAINPROGRAM 
 #define EXTERN 
@@ -9,16 +8,24 @@ typedef glm::vec3 vec3;
 #define EXTERN extern 
 #endif
 
-extern int image_width = 640; //from test scene 
-extern int image_height = 480;
-extern float fovy(45);
-extern float fovx = fovy * (image_width / (image_height *1.0));
-extern vec3 eye(-4, -4, 4); //0 for now 
-extern vec3 center(0.0, 1.0, 0.0);
+EXTERN int image_width; //from test scene 
+EXTERN int image_height;
+EXTERN float fovy;
+EXTERN vec3 eye; // 0 for now
+EXTERN vec3 center;
+EXTERN vec3 up;
 
-extern vec3 up(1.0, 0.0, 0.0);
-extern vec3 A(2.0, 4.0, 1.0);
-extern vec3 B(0.0, 0.0, 1.0);
-extern vec3 C(0.0, -1.0, 3.0);
+
+
+EXTERN vector<object> obj;
+
+EXTERN float ambient[3];
+EXTERN float diffuse[3];
+EXTERN float specular[3];
+EXTERN float emission[3];
+EXTERN float shininess;
+const vec3 A(2.0, 4.0, 1.0);
+const vec3 B(0.0, 0.0, 1.0);
+const vec3 C(0.0, -1.0, 3.0);
 
 

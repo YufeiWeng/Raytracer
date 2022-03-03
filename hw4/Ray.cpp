@@ -9,8 +9,8 @@ Ray::Ray(int i, int j){
     w = glm::normalize(eye-center);
     u = glm::normalize(glm::cross(up, w));
     v = glm::cross(w, u);
-    float alpha = tanf(glm::radians(fovx) / 2.0) * ((j - image_width / 2.0) / (image_width / 2.0));
-    float beta = tanf(glm::radians(fovy) / 2.0) * ((image_height / 2.0 - i) / (image_height / 2.0));
+	float alpha = (tanf(glm::radians(fovy) / 2.0) * (image_width / (image_height * 1.0))) * ((j - image_width / 2.0) / (image_width / 2.0));
+	float beta = tanf(glm::radians(fovy) / 2.0) * ((image_height / 2.0 - i) / (image_height / 2.0));
 	dir = normalize(alpha * u + beta * v - w);
 	ori = eye;
 }
