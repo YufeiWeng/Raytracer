@@ -143,11 +143,13 @@
   <ItemGroup>
     <ClInclude Include="main.h" />
     <ClInclude Include="Ray.h" />
+    <ClInclude Include="readfile.h" />
     <ClInclude Include="variable.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Ray.cpp" />
+    <ClCompile Include="readfile.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
