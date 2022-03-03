@@ -142,12 +142,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="main.h" />
+    <ClInclude Include="object.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="readfile.h" />
     <ClInclude Include="variable.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="object.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="readfile.cpp" />
   </ItemGroup>

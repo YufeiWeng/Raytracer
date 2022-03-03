@@ -15,7 +15,7 @@ enum shape
 
 class object
 {
-private:
+public:
     /* data */
     shape _type;
     vec4 _ambient;
@@ -34,7 +34,7 @@ public:
 
 class triangle: public object
 {
-private:
+public:
     /* data */
     vec3 _A;
     vec3 _B;

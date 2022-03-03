@@ -5,27 +5,27 @@
 #include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>  //If there are redlines, go and check: https://www.google.com/search?q=how+to+include+glm+in+visual+studio+2019&ei=tbkeYuH6BZrHkPIPgMex2A0&ved=0ahUKEwihqa6plab2AhWaI0QIHYBjDNsQ4dUDCA4&uact=5&oq=how+to+include+glm+in+visual+studio+2019&gs_lcp=Cgdnd3Mtd2l6EAMyBQghEKsCOgcIABBHELADOgYIABAWEB46BQgAEIYDOgUIIRCgAUoECEEYAEoECEYYAFCyBVj-C2D3DmgBcAF4AYAB9AGIAYcGkgEFMC40LjGYAQCgAQHIAQjAAQE&sclient=gws-wiz#kpvalbx=_u7keYvz9FrefkPIPt8SO8Aw20
- 
 
-bool hit_triangle(const vec3 &vertexA,
-                       const vec3 &vertexB, 
-                       const vec3 &vertexC,
-                       const Ray& ray) {
+
+vec3 hit_triangle(const vec3& vertexA,
+    const vec3& vertexB,
+    const vec3& vertexC,
+    const Ray& ray) {
     vec3 normal = glm::cross((vertexC - vertexA), (vertexB - vertexA));
     normal = glm::normalize(normal);
-    float t = (glm::dot(vertexA, normal) - glm::dot(ray.ori, normal)) / (glm::dot(ray.dir,normal));
+    float t = (glm::dot(vertexA, normal) - glm::dot(ray.ori, normal)) / (glm::dot(ray.dir, normal));
     glm::vec3 P = ray.at(t);
     if (glm::dot(ray.dir, normal) == 0) {
-        return false;
+        return vec3(0.0, 0.0, 0.0);
     }
 
     vec3 Apnormal, Bpnormal, Cpnormal;
-    Apnormal = (glm::cross(normal, vertexC - vertexB))/
-                glm::dot((glm::cross(normal, vertexC - vertexB)), vertexA-vertexC);
+    Apnormal = (glm::cross(normal, vertexC - vertexB)) /
+        glm::dot((glm::cross(normal, vertexC - vertexB)), vertexA - vertexC);
     Bpnormal = (glm::cross(normal, vertexA - vertexC)) /
-                glm::dot((glm::cross(normal, vertexA - vertexC)), vertexB - vertexA);
+        glm::dot((glm::cross(normal, vertexA - vertexC)), vertexB - vertexA);
     Cpnormal = (glm::cross(normal, vertexB - vertexA)) /
-                glm::dot((glm::cross(normal, vertexB - vertexA)), vertexC - vertexB);
+        glm::dot((glm::cross(normal, vertexB - vertexA)), vertexC - vertexB);
     float Apw = glm::dot(-Apnormal, vertexC);
     float Bpw = glm::dot(-Bpnormal, vertexA);
     float Cpw = glm::dot(-Cpnormal, vertexB);
@@ -34,7 +34,7 @@ bool hit_triangle(const vec3 &vertexA,
     a = glm::dot(Apnormal, P) + Apw;
     b = glm::dot(Bpnormal, P) + Bpw;
     c = glm::dot(Cpnormal, P) + Cpw;
-    
+
     // if (a >= 0.0 && b >= 0.0 && c >= 0.0 && a + b + c == 1.0) {
     //     return vec3(1.0, 0.0, 0.0);
     // }
@@ -42,28 +42,28 @@ bool hit_triangle(const vec3 &vertexA,
     //     return vec3(0.0, 0.0, 0.0);
     // }
 
-    if (a<0){
-        return false;
+    if (a < 0) {
+        return vec3(0.0, 0.0, 0.0);
     }
-    if (a>1){
-        return false;
+    if (a > 1) {
+        return vec3(0.0, 0.0, 0.0);
     }
-    if (b<0){
-        return false;
+    if (b < 0) {
+        return vec3(0.0, 0.0, 0.0);
     }
-    if (b>1){
-        return false;
+    if (b > 1) {
+        return vec3(0.0, 0.0, 0.0);
     }
-    if (c<0){
-        return false;
+    if (c < 0) {
+        return vec3(0.0, 0.0, 0.0);
     }
-    if (c>1){
-        return false;
+    if (c > 1) {
+        return vec3(0.0, 0.0, 0.0);
     }
-    return true;
+    return vec3(1.0, 0.0, 0.0);
 }
 
-bool hit_sphere(const vec3& center, double radius, const Ray& ray ) {
+vec3 hit_sphere(const vec3& center, double radius, const Ray& ray) {
     //at^2+bt+c=0
     //d=sqrt(b^2-4ac)
     //t=(-b+-d)/(2a)
@@ -74,12 +74,12 @@ bool hit_sphere(const vec3& center, double radius, const Ray& ray ) {
     //two intersections
     if (d > 0) {
         //red for now
-        return true;
+        return vec3(1.0, 0.0, 0.0);
     }
     //one or none
     else {
         //background is black
-        return false;
+        return vec3(0.0, 0.0, 0.0);
     }
 }
 
@@ -97,8 +97,19 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < image_height; ++i) {
         for (int j = 0; j < image_width; ++j) {
             Ray ray(i, j);
+            vec3 color(0.0,0.0,0.0);
             //vec3 color = hit_sphere(vec3(0,0,0), 0.5, ray);
-            vec3 color = hit_triangle(A, B, C, ray);
+            for (int k = 0; k < obj.size(); k++) {
+                if (obj[k]._type == tri) {
+                    triangle* tri = (triangle*)&obj[k];// how to get tri
+                    color = hit_triangle(tri->_A, tri->_B, tri->_C, ray);
+                }
+                else {
+                    //sphere* sph = (sphere*)&obj[k];
+                    //color = hit_sphere(sph->_C, sph->r, ray);
+                }
+                
+            }
             cout << static_cast<int>(255.999 * color.x) << ' '
                 << static_cast<int>(255.999 * color.y) << ' '
                 << static_cast<int>(255.999 * color.z) << '\n';
@@ -106,4 +117,3 @@ int main(int argc, char* argv[]) {
     }
     return 0;
 }
-
