@@ -105,6 +105,9 @@ int main(int argc, char* argv[]) {
             for (int k = 0; k < obj.size(); k++) {
                 if (obj[k]->_type == tri) {
                     triangle* tri = (triangle*)obj[k];// how to get tri
+                    if (color == vec3(1.0, 0.0 ,0.0)) {
+
+                    }
                     color = hit_triangle(tri->_A, tri->_B, tri->_C, ray);
                 }
                 else {
