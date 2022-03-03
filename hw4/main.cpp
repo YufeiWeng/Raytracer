@@ -95,7 +95,7 @@ int main(int argc, char* argv[]) {
     readfile(argv[1]);
 
     std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
-
+    // cout<<obj[1]->_type<<endl;
     for (int i = 0; i < image_height; ++i) {
         for (int j = 0; j < image_width; ++j) {
             Ray ray(i, j);
@@ -105,6 +105,9 @@ int main(int argc, char* argv[]) {
             for (int k = 0; k < obj.size(); k++) {
                 if (obj[k]->_type == tri) {
                     triangle* tri = (triangle*)obj[k];// how to get tri
+                    // cout << tri->_A[0] << tri->_A[1] << tri->_A[2]<<endl;
+                    // cout << tri->_B[0] << tri->_B[1] << tri->_B[2] << endl;
+                    // cout << tri->_C[0] << tri->_C[1] << tri->_C[2] << endl;
                     color = hit_triangle(tri->_A, tri->_B, tri->_C, ray);
                 }
                 else {
