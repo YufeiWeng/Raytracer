@@ -48,7 +48,6 @@ triangle::triangle(const shape &type,
     _B=B_;
     _C=C_;
 
-
 }
 
 

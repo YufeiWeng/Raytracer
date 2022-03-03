@@ -91,7 +91,9 @@ int main(int argc, char* argv[]) {
     // Render
     // cout<<argv[1]<<endl;
 
+    // cout<<(triangle)obj[0]<<endl;
     readfile(argv[1]);
+
     std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
     for (int i = 0; i < image_height; ++i) {
@@ -99,11 +101,19 @@ int main(int argc, char* argv[]) {
             Ray ray(i, j);
             //vec3 color = hit_sphere(vec3(0,0,0), 0.5, ray);
             vec3 color = hit_triangle(A, B, C, ray);
-            cout << static_cast<int>(255.999 * color.x) << ' '
-                << static_cast<int>(255.999 * color.y) << ' '
-                << static_cast<int>(255.999 * color.z) << '\n';
+            // cout << static_cast<int>(255.999 * color.x) << ' '
+            //     << static_cast<int>(255.999 * color.y) << ' '
+            //     << static_cast<int>(255.999 * color.z) << '\n';
         }
     }
+    int i = 0;
+    while (i < obj.size())
+    {
+        delete obj.back();
+        obj.pop_back(); 
+        i++;
+    }
+    
     return 0;
 }
 

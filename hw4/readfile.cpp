@@ -141,7 +141,7 @@ void readfile(const char *filename)
                     if (validinput)
                     {
                         
-                        obj.push_back(triangle(tri, ambient, diffuse, specular, emission, shininess,
+                        obj.push_back(new triangle(tri, ambient, diffuse, specular, emission, shininess,
                                                vertexes[values[0]], vertexes[values[1]], vertexes[values[2]]));
                     }
                     
