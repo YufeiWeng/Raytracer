@@ -9,7 +9,7 @@ typedef glm::vec3 vec3;
 typedef glm::vec4 vec4;
 enum shape
 {
-    sphere,
+    sph,
     tri
 };
 
@@ -56,7 +56,7 @@ public:
 
 class sphere : public object
 {
-private:
+public:
     /* data */
     vec3 _center;
     float _radius;

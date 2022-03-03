@@ -101,10 +101,21 @@ int main(int argc, char* argv[]) {
             Ray ray(i, j);
             vec3 color(0.0,0.0,0.0);
             //vec3 color = hit_sphere(vec3(0,0,0), 0.5, ray);
-            vec3 color = hit_triangle(A, B, C, ray);
-            // cout << static_cast<int>(255.999 * color.x) << ' '
-            //     << static_cast<int>(255.999 * color.y) << ' '
-            //     << static_cast<int>(255.999 * color.z) << '\n';
+            //vec3 color = hit_triangle(A, B, C, ray);
+            for (int k = 0; k < obj.size(); k++) {
+                if (obj[k]->_type == tri) {
+                    triangle* tri = (triangle*)obj[k];// how to get tri
+                    color = hit_triangle(tri->_A, tri->_B, tri->_C, ray);
+                }
+                else {
+                    sphere* sph = (sphere*)obj[k];
+                    color = hit_sphere(sph->_center, sph->_radius, ray);
+                }
+
+            }
+             cout << static_cast<int>(255.999 * color.x) << ' '
+                  << static_cast<int>(255.999 * color.y) << ' '
+                  << static_cast<int>(255.999 * color.z) << '\n';
         }
     }
     int i = 0;
