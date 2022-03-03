@@ -95,7 +95,7 @@ int main(int argc, char* argv[]) {
     readfile(argv[1]);
 
     std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
-
+    // cout<<obj[1]->_type<<endl;
     for (int i = 0; i < image_height; ++i) {
         for (int j = 0; j < image_width; ++j) {
             Ray ray(i, j);
