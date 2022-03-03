@@ -90,7 +90,7 @@ int main(int argc, char* argv[]) {
     //uwv
 
     // Render
-    image_width=640;
+ 
     std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
     for (int i = 0; i < image_height; ++i) {
