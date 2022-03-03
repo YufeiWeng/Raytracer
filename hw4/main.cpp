@@ -7,7 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>  //If there are redlines, go and check: https://www.google.com/search?q=how+to+include+glm+in+visual+studio+2019&ei=tbkeYuH6BZrHkPIPgMex2A0&ved=0ahUKEwihqa6plab2AhWaI0QIHYBjDNsQ4dUDCA4&uact=5&oq=how+to+include+glm+in+visual+studio+2019&gs_lcp=Cgdnd3Mtd2l6EAMyBQghEKsCOgcIABBHELADOgYIABAWEB46BQgAEIYDOgUIIRCgAUoECEEYAEoECEYYAFCyBVj-C2D3DmgBcAF4AYAB9AGIAYcGkgEFMC40LjGYAQCgAQHIAQjAAQE&sclient=gws-wiz#kpvalbx=_u7keYvz9FrefkPIPt8SO8Aw20
  
 
-vec3 hit_triangle(const vec3 &vertexA,
+bool hit_triangle(const vec3 &vertexA,
                        const vec3 &vertexB, 
                        const vec3 &vertexC,
                        const Ray& ray) {
@@ -16,7 +16,7 @@ vec3 hit_triangle(const vec3 &vertexA,
     float t = (glm::dot(vertexA, normal) - glm::dot(ray.ori, normal)) / (glm::dot(ray.dir,normal));
     glm::vec3 P = ray.at(t);
     if (glm::dot(ray.dir, normal) == 0) {
-        return vec3(0.0, 0.0, 0.0);
+        return false;
     }
 
     vec3 Apnormal, Bpnormal, Cpnormal;
@@ -43,27 +43,27 @@ vec3 hit_triangle(const vec3 &vertexA,
     // }
 
     if (a<0){
-        return vec3(0.0, 0.0, 0.0);
+        return false;
     }
     if (a>1){
-        return vec3(0.0, 0.0, 0.0);
+        return false;
     }
     if (b<0){
-        return vec3(0.0, 0.0, 0.0);
+        return false;
     }
     if (b>1){
-        return vec3(0.0, 0.0, 0.0);
+        return false;
     }
     if (c<0){
-        return vec3(0.0, 0.0, 0.0);
+        return false;
     }
     if (c>1){
-        return vec3(0.0, 0.0, 0.0);
+        return false;
     }
-    return vec3(1.0,0.0,0.0);
+    return true;
 }
 
-vec3 hit_sphere(const vec3& center, double radius, const Ray& ray ) {
+bool hit_sphere(const vec3& center, double radius, const Ray& ray ) {
     //at^2+bt+c=0
     //d=sqrt(b^2-4ac)
     //t=(-b+-d)/(2a)
@@ -74,12 +74,12 @@ vec3 hit_sphere(const vec3& center, double radius, const Ray& ray ) {
     //two intersections
     if (d > 0) {
         //red for now
-        return vec3(1.0, 0.0, 0.0);
+        return true;
     }
     //one or none
     else {
         //background is black
-        return vec3(0.0, 0.0, 0.0);
+        return false;
     }
 }
 
