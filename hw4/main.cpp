@@ -63,7 +63,7 @@ vec3 hit_triangle(const vec3& vertexA,
     return vec3(1.0, 0.0, 0.0);
 }
 
-vec3 hit_sphere(const vec3& center, double radius, const Ray& ray) {
+vec3 hit_sphere(const vec3& center, double radius, const Ray& ray) {//remember to return an pointer of object
     //at^2+bt+c=0
     //d=sqrt(b^2-4ac)
     //t=(-b+-d)/(2a)
