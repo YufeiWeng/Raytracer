@@ -36,11 +36,12 @@ class triangle: public object
 {
 public:
     /* data */
+
+
+public:
     vec3 _A;
     vec3 _B;
     vec3 _C;
-
-public:
     triangle(const shape &type,
              float *ambient,
              float *diffuse,

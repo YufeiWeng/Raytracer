@@ -17,7 +17,7 @@ EXTERN vec3 up;
 
 
 
-EXTERN vector<object> obj;
+EXTERN vector<object*> obj; //deloca
 
 EXTERN float ambient[3];
 EXTERN float diffuse[3];
