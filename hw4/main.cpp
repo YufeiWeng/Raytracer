@@ -115,12 +115,12 @@ bool hit_sphere(sphere* sph, const Ray& ray) {//remember to return an pointer of
 /*
 * return the clostest object 
 */
-object* Intersection(vector<object*> obj, Ray& ray) {
-    float t_min = obj[0]->_t;
+object* Intersection(vector<object*>& objList, Ray& ray) {
+    float t_min = objList[0]->_t;
     object* closest = nullptr;
     for (int k = 0; k < obj.size(); k++) {
-        if (obj[k]->_type == tri) {
-            triangle* tri = (triangle*)obj[k];// how to get tri
+        if (objList[k]->_type == tri) {
+            triangle* tri = (triangle*)objList[k];// how to get tri
             //check if ray hits the tri
             if (hit_triangle(tri, ray)) {
                 //if tri is closer
@@ -131,7 +131,7 @@ object* Intersection(vector<object*> obj, Ray& ray) {
             }
         }
         else {
-            sphere* sph = (sphere*)obj[k];
+            sphere* sph = (sphere*)objList[k];
             if (hit_sphere(sph, ray)) {
                 //if sph is closer
                 if (sph->_t < t_min) {
