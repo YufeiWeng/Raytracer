@@ -115,12 +115,12 @@ bool hit_sphere(sphere* sph, const Ray& ray) {//remember to return an pointer of
 /*
 * return the clostest object 
 */
-object* Intersection(vector<object*>& objList, Ray& ray) {
-    float t_min = objList[0]->_t;
+object* Intersection(Ray& ray) {
+    float t_min = obj[0]->_t;
     object* closest = nullptr;
     for (int k = 0; k < obj.size(); k++) {
-        if (objList[k]->_type == tri) {
-            triangle* tri = (triangle*)objList[k];// how to get tri
+        if (obj[k]->_type == tri) {
+            triangle* tri = (triangle*)obj[k];// how to get tri
             //check if ray hits the tri
             if (hit_triangle(tri, ray)) {
                 //if tri is closer
@@ -131,7 +131,7 @@ object* Intersection(vector<object*>& objList, Ray& ray) {
             }
         }
         else {
-            sphere* sph = (sphere*)objList[k];
+            sphere* sph = (sphere*)obj[k];
             if (hit_sphere(sph, ray)) {
                 //if sph is closer
                 if (sph->_t < t_min) {
@@ -175,7 +175,7 @@ int main(int argc, char* argv[]) {
         for (int j = 0; j < image_width; ++j) {
             Ray ray(i, j);
             vec3 color(0.0,0.0,0.0);
-            object* hit = Intersection(obj, ray);
+            object* hit = Intersection(ray);
             color = ComputeColor(hit);
             cout << static_cast<int>(255.999 * color.x) << ' '
                   << static_cast<int>(255.999 * color.y) << ' '
