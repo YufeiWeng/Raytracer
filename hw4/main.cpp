@@ -148,9 +148,13 @@ object* Intersection(vector<object*>& objList, Ray& ray) {
 *compute color; need further implements
 */
 vec3 ComputeColor(object* closest) {
-    //vec3 color(0.0, 0.0, 0.0);
-    vec3 color = closest->_ambient;
-    return color;
+    vec3 color(0.0, 0.0, 0.0);
+    if (closest == nullptr) {
+        return color;
+    }
+    else {
+        return closest->_ambient;
+    }
 }
 
 
