@@ -3,6 +3,7 @@
 #include "readfile.h"
 
 float INF = numeric_limits<float>::infinity(); //default value t for every object
+//float INF = 35415; //for test
 
 bool readvals(stringstream &s, const int numvals, float *values)
 {
