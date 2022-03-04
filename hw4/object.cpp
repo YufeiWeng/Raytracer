@@ -16,7 +16,7 @@ object::object(const shape &type,
     _diffuse[0] = diffuse[0];
     _diffuse[1] = diffuse[1];
     _diffuse[2] = diffuse[2];
-    // _diffuse[3] = 1.0;
+    //_diffuse[3] = 1.0;
     _specular[0] = specular[0];
     _specular[1] = specular[1];
     _specular[2] = specular[2];
