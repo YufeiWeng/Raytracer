@@ -2,6 +2,8 @@
 #include "variable.h"
 #include "readfile.h"
 
+float INF = numeric_limits<float>::infinity(); //default value t for every object
+
 bool readvals(stringstream &s, const int numvals, float *values)
 {
     for (int i = 0; i < numvals; i++)
@@ -141,11 +143,11 @@ void readfile(const char *filename)
                     if (validinput)
                     {
                         
-                        obj.push_back(new triangle(tri, ambient, diffuse, specular, emission, shininess,
+                        obj.push_back(new triangle(tri, ambient, diffuse, specular, emission, shininess, INF,
                                                vertexes[values[0]], vertexes[values[1]], vertexes[values[2]]));
                     }
                     
-                }
+                }// we still need to read sphere
             }
 
             // cout << str << endl;

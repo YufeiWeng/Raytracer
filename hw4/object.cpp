@@ -5,7 +5,8 @@ object::object(const shape &type,
                float *diffuse,
                float *specular,
                float *emission,
-               float &shininess)
+               float &shininess,
+               float t)
 {
     _type=type;
     _ambient[0] = ambient[0];
@@ -25,6 +26,7 @@ object::object(const shape &type,
     _emission[2] = emission[2];
     _emission[3] = 1.0;
     _shininess = shininess;
+    _t = t;
 }
 
 triangle::triangle(const shape &type,
@@ -33,6 +35,7 @@ triangle::triangle(const shape &type,
                    float *specular,
                    float *emission,
                    float &shininess,
+                   float t,
                    const vec3 &A_,
                    const vec3 &B_,
                    const vec3 &C_) : object(type,
@@ -40,7 +43,8 @@ triangle::triangle(const shape &type,
                                           diffuse,
                                           specular,
                                           emission,
-                                          shininess)
+                                          shininess,
+                                          t)
 {
 
 
@@ -57,13 +61,15 @@ sphere::sphere(const shape &type,
                float *specular,
                float *emission,
                float &shininess,
+               float t,
                vec3 &C,
                float r) : object(type,
                                  ambient,
                                  diffuse,
                                  specular,
                                  emission,
-                                 shininess)
+                                 shininess,
+                                 t)
 {
     _center=C;
     _radius=r;

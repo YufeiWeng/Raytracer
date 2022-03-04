@@ -1,6 +1,7 @@
 
 
 #include "object.h"
+#include <limits>
 
 #ifdef MAINPROGRAM 
 #define EXTERN 
