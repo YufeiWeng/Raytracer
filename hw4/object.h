@@ -18,10 +18,10 @@ class object
 public:
     /* data */
     shape _type;
-    vec4 _ambient;
-    vec4 _diffuse;
-    vec4 _specular;
-    vec4 _emission;
+    vec3 _ambient;
+    vec3 _diffuse;
+    vec3 _specular;
+    vec3 _emission;
     float _shininess;
     float _t;
 public:

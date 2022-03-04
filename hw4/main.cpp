@@ -147,8 +147,10 @@ object* Intersection(vector<object*> obj, Ray& ray) {
 /*
 *compute color; need further implements
 */
-vec3 ComputeColor(object* obj) {
-    return obj->_ambient;
+vec3 ComputeColor(object* closest) {
+    //vec3 color(0.0, 0.0, 0.0);
+    vec3 color = closest->_ambient;
+    return color;
 }
 
 
@@ -169,8 +171,6 @@ int main(int argc, char* argv[]) {
         for (int j = 0; j < image_width; ++j) {
             Ray ray(i, j);
             vec3 color(0.0,0.0,0.0);
-            //vec3 color = hit_sphere(vec3(0,0,0), 0.5, ray);
-            //vec3 color = hit_triangle(A, B, C, ray);
             object* hit = Intersection(obj, ray);
             color = ComputeColor(hit);
             cout << static_cast<int>(255.999 * color.x) << ' '
