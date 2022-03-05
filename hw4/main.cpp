@@ -130,10 +130,12 @@ float hit_sphere(sphere *sph, const Ray &ray)
 /*
  * return the clostest object
  */
-object *Intersection(vector<object *> &objList, Ray &ray)
+hit_record Intersection(const vector<object *> &objList,const Ray &ray)
 {
     float t_min = INF;
     object *closest = nullptr;
+    hit_record output;
+    output.t=-1.0;
     for (int k = 0; k < objList.size(); k++)
     {
         if (objList[k]->_type == tri)
@@ -148,6 +150,8 @@ object *Intersection(vector<object *> &objList, Ray &ray)
 
                 closest = tri;
                 t_min = t_value; // update t_min
+                output.target = closest;
+                output.t=t_min;
             }
         }
         else
@@ -160,16 +164,19 @@ object *Intersection(vector<object *> &objList, Ray &ray)
             {
                 closest = sph;
                 t_min = t_value; // update t_min
+                output.target = closest;
+                output.t = t_min;
             }
         }
     }
-    return closest;
+    output.p=ray;
+    return output;
 }
 
 /*
  *compute color; need further implements
  */
-vec3 ComputeColor(object *closest)
+vec3 ComputeColor(hit_record *closest)
 {
     vec3 color(0.0, 0.0, 0.0);
     if (closest == nullptr)
@@ -216,7 +223,7 @@ int main(int argc, char *argv[])
         {
             Ray ray(i, j);
             vec3 color(0.0, 0.0, 0.0);
-            object *hit = Intersection(obj, ray);
+            hit_record hit = Intersection(obj, ray);
             color = ComputeColor(hit);
             cout << static_cast<int>(255.999 * color.x) << ' '
                  << static_cast<int>(255.999 * color.y) << ' '
