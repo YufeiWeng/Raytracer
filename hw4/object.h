@@ -18,18 +18,20 @@ class object
 public:
     /* data */
     shape _type;
-    vec4 _ambient;
-    vec4 _diffuse;
-    vec4 _specular;
-    vec4 _emission;
+    vec3 _ambient;
+    vec3 _diffuse;
+    vec3 _specular;
+    vec3 _emission;
     float _shininess;
+
 public:
-    object(const shape &type,
-           float *ambient,
-           float *diffuse,
-           float *specular,
-           float *emission,
-           float &shininess);
+    object(const shape& type,
+        float* ambient,
+        float* diffuse,
+        float* specular,
+        float* emission,
+        float& shininess); //t is for the intersection point P such that P = ray.origin + t * ray.direction 
+                  //default value will be positive infinity; see read file
 };
 
 class triangle: public object
@@ -48,6 +50,7 @@ public:
              float *specular,
              float *emission,
              float &shininess,
+
              const vec3 &A_,
              const vec3 &B_,
              const vec3 &C_);
@@ -68,6 +71,6 @@ public:
            float *specular,
            float *emission,
            float &shininess,
-           vec3 &C,
+           const vec3 &C,
            float r);
 };

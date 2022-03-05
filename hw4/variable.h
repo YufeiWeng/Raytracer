@@ -1,6 +1,7 @@
 
 
 #include "object.h"
+#include <limits>
 
 #ifdef MAINPROGRAM 
 #define EXTERN 
@@ -15,7 +16,7 @@ EXTERN vec3 eye; // 0 for now
 EXTERN vec3 center;
 EXTERN vec3 up;
 
-
+const float INF = numeric_limits<float>::infinity();
 
 EXTERN vector<object*> obj; //deloca
 

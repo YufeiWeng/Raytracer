@@ -2,6 +2,9 @@
 #include "variable.h"
 #include "readfile.h"
 
+//default value t for every object
+//float INF = 35415; //for test
+
 bool readvals(stringstream &s, const int numvals, float *values)
 {
     for (int i = 0; i < numvals; i++)
@@ -145,6 +148,13 @@ void readfile(const char *filename)
                                                vertexes[values[0]], vertexes[values[1]], vertexes[values[2]]));
                     }
                     
+                }else if (cmd== "sphere"){
+                    validinput = readvals(s,4,values);
+                    if (validinput){
+                        obj.push_back(new sphere(sph, ambient, diffuse, specular, emission, shininess,
+                                                 vec3(values[0], values[1], values[2]),values[3]
+                                                 ));
+                    }
                 }
             }
 
