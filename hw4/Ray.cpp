@@ -1,4 +1,8 @@
 #include "Ray.h"
+Ray::Ray(){
+	ori=vec3(0.0,0.0,0.0);
+	dir = vec3(0.0, 0.0, 0.0);
+}
 Ray::Ray(const vec3 origin, const vec3 direction) {
 	ori = origin;
 	dir = direction;

@@ -35,9 +35,3 @@ EXTERN float lightcolor[3 * numLights]; // Light Colors
 EXTERN float lightransf[4 * numLights]; // Lights transformed by modelview
 EXTERN int numused;                     // How many lights are used
 
-struct hit_record
-{
-    Ray p;
-    float t;
-    object* target;
-};

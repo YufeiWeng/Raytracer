@@ -5,7 +5,12 @@
 #include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp> //If there are redlines, go and check: https://www.google.com/search?q=how+to+include+glm+in+visual+studio+2019&ei=tbkeYuH6BZrHkPIPgMex2A0&ved=0ahUKEwihqa6plab2AhWaI0QIHYBjDNsQ4dUDCA4&uact=5&oq=how+to+include+glm+in+visual+studio+2019&gs_lcp=Cgdnd3Mtd2l6EAMyBQghEKsCOgcIABBHELADOgYIABAWEB46BQgAEIYDOgUIIRCgAUoECEEYAEoECEYYAFCyBVj-C2D3DmgBcAF4AYAB9AGIAYcGkgEFMC40LjGYAQCgAQHIAQjAAQE&sclient=gws-wiz#kpvalbx=_u7keYvz9FrefkPIPt8SO8Aw20
-
+struct hit_record
+{
+    Ray p;
+    float t;
+    object *target;
+};
 /*
  * Return a boolean: If ray hit tri, then ture; Also update tri's t
  */
@@ -130,12 +135,12 @@ float hit_sphere(sphere *sph, const Ray &ray)
 /*
  * return the clostest object
  */
-hit_record Intersection(const vector<object *> &objList,const Ray &ray)
+hit_record Intersection(const vector<object *> &objList, const Ray &ray)
 {
     float t_min = INF;
     object *closest = nullptr;
     hit_record output;
-    output.t=-1.0;
+    output.t = -1.0;
     for (int k = 0; k < objList.size(); k++)
     {
         if (objList[k]->_type == tri)
@@ -151,7 +156,7 @@ hit_record Intersection(const vector<object *> &objList,const Ray &ray)
                 closest = tri;
                 t_min = t_value; // update t_min
                 output.target = closest;
-                output.t=t_min;
+                output.t = t_min;
             }
         }
         else
@@ -169,63 +174,12 @@ hit_record Intersection(const vector<object *> &objList,const Ray &ray)
             }
         }
     }
-    output.p=ray;
+    output.p = ray;
     return output;
 }
 
-
-
-
-/*
- *compute color; need further implements
- */
-vec3 ComputeColor(hit_record *closest)
+vec3 ComputeLight(const vec3 direction, const vec3 lightcolor, const vec3 normal, const vec3 halfvec, const vec3 mydiffuse, const vec3 myspecular, const float myshininess)
 {
-    vec3 finalcolor(0.0, 0.0, 0.0);
-    if (closest == nullptr)
-    {
-        return finalcolor;
-    }
-    else
-    {
-        // cout << "notnull" << endl;
-        // return vec3(1.0, 0.0, 0.0);
-        vec3 normal;
-        if (closest->_type == tri) {
-            triangle* tri = (triangle*)closest;
-            normal = tri->findNormal();
-        }
-        for (int i = 0; i < numused; i++) {
-            vec3 eyedirn = ray.dir; //???
-            vec3 diffuse = closest->_diffuse;
-            vec3 specular = closest->_specular;
-            float shininess = closest->_shininess;
-            vec3 position;
-            vec3 direction;
-            vec3 myhalf;
-            vec4 color = vec4(lightcolor[4*i], lightcolor[4*i+1], lightcolor[4 * i + 2], lightcolor[4 * i + 3]);
-            vec4 lightposn = vec4(lightposn[4 * i], lightposn[4 * i + 1], lightposn[4 * i + 2], lightposn[4 * i + 3]);
-            if (lightposn.w == 0) {   //directional 
-                direction = vec3(lightposn[4 * i], lightposn[4 * i + 1], lightposn[4 * i + 2]);
-                direction = normalize(direction);
-                myhalf = normalize(direction + eyedirn);
-            }
-            else {     //point???
-                position = lightposn[i].xyz / lightposn[i].w;
-                direction = normalize(position - mypos);
-                myhalf = normalize(direction + eyedirn);
-            }
-            vec3 col = ComputeLight(direction, color, normal, myhalf, diffuse, specular, shininess);
-            finalcolor += color;
-        }
-
-
-        finalcolor += ambient;
-        return finalcolor;
-    }
-}
-
-vec3 ComputeLight(const vec3 direction, const vec3 lightcolor, const vec3 normal, const vec3 halfvec, const vec3 mydiffuse, const vec3 myspecular, const float myshininess) {
 
     float nDotL = dot(normal, direction);
     vec3 lambert = mydiffuse * lightcolor * max(nDotL, float(0.0));
@@ -234,7 +188,63 @@ vec3 ComputeLight(const vec3 direction, const vec3 lightcolor, const vec3 normal
     vec3 phong = myspecular * lightcolor * pow(max(nDotH, float(0.0)), myshininess);
 
     vec3 retval = lambert + phong;
+    // cout << nDotL << endl;
+    // cout << lambert[0] << lambert[1] <<" "<< lambert[2] << endl;
     return retval;
+}
+
+/*
+ *compute color; need further implements
+ */
+vec3 ComputeColor(hit_record closest)
+{
+    vec3 finalcolor(0.0, 0.0, 0.0);
+    if (closest.t < 0)
+    {
+        return finalcolor;
+    }
+    else
+    {
+        // cout << "notnull" << endl;
+        // return vec3(1.0, 0.0, 0.0);
+        vec3 normal;
+        if (closest.target->_type == tri)
+        {
+            triangle *tri = (triangle *)closest.target;
+            normal = tri->findNormal();
+        }
+        for (int i = 0; i < numused; i++)
+        {
+            vec3 eyedirn = closest.t * closest.p.dir; //???
+            vec3 diffuse = closest.target->_diffuse;
+            vec3 specular = closest.target->_specular;
+            float shininess = closest.target->_shininess;
+            vec3 position;
+            vec3 direction;
+            vec3 myhalf;
+            vec3 color = vec3(lightcolor[3 * i], lightcolor[3 * i + 1], lightcolor[3 * i + 2]);
+            direction = vec3(lightposn[4 * i], lightposn[4 * i + 1], lightposn[4 * i + 2]);
+
+            if (lightposn[4 * i + 3] == 0)
+            { // directional
+                direction = normalize(direction);
+                myhalf = normalize(direction + eyedirn);
+            }
+            else
+            { // point???
+                position = vec3(lightposn[4 * i], lightposn[4 * i + 1], lightposn[4 * i + 2]) / lightposn[4 * i + 3];
+                direction = normalize(position - (closest.p.ori + closest.t * closest.p.dir));
+                myhalf = normalize(direction + eyedirn);
+            }
+            vec3 col = ComputeLight(direction, color, normal, myhalf, diffuse, specular, shininess);
+            finalcolor = finalcolor + col;
+        }
+        // cout<<finalcolor[0]<<finalcolor[1]<<finalcolor[2]<<endl;
+        finalcolor = finalcolor + closest.target->_ambient + closest.target->_emission;
+        // cout << finalcolor[0] << " " << finalcolor[1] << " " << finalcolor[2] << endl;
+
+        return finalcolor;
+    }
 }
 
 int main(int argc, char *argv[])
@@ -264,6 +274,7 @@ int main(int argc, char *argv[])
                  << static_cast<int>(255.999 * color.z) << '\n';
         }
     }
+
     int i = 0;
     while (i < obj.size())
     {

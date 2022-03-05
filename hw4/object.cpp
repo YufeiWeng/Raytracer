@@ -53,8 +53,8 @@ triangle::triangle(const shape &type,
 
 }
 vec3 triangle::findNormal() {
-    vec3 normal = cross((this->_C - this->_A), (this->_B - this->_A));
-    normal = glm::normalize(normal);
+    vec3 normal = cross((_C - _A), (_B - _A));
+    normal = (-1.0f)*glm::normalize(normal);
     return normal;
 }
 

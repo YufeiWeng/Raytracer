@@ -2,8 +2,8 @@
 #include "variable.h"
 #include "readfile.h"
 
-//default value t for every object
-//float INF = 35415; //for test
+// default value t for every object
+// float INF = 35415; //for test
 
 bool readvals(stringstream &s, const int numvals, float *values)
 {
@@ -21,17 +21,17 @@ bool readvals(stringstream &s, const int numvals, float *values)
 
 void readfile(const char *filename)
 {
-    ambient[0]=0.2; ambient[1]=0.2; ambient[2]=0.2;
-    diffuse[0]=0.0; diffuse[1]=0.0; diffuse[2]=0.0;
-    specular[0]=0.0; specular[1]=0.0; specular[2]=0.0;
-    emission[0]=0.0; emission[1]=0.0; emission[2]=0.0;
-    shininess=0.0;
+    ambient[0] = 0.2;ambient[1] = 0.2;ambient[2] = 0.2;
+    diffuse[0] = 0.0;diffuse[1] = 0.0;diffuse[2] = 0.0;
+    specular[0] = 0.0;specular[1] = 0.0;specular[2] = 0.0;
+    emission[0] = 0.0;emission[1] = 0.0;emission[2] = 0.0;
+    shininess = 0.0;
 
     string str, cmd;
     ifstream in;
     int i;
     vector<vec3> vertexes;
-
+    numused=0;
     in.open(filename);
     if (in.is_open())
     {
@@ -44,7 +44,7 @@ void readfile(const char *filename)
                 stringstream s(str);
                 float values[10];
                 bool validinput;
-                s >>cmd;
+                s >> cmd;
                 if (cmd == "size")
                 {
                     validinput = readvals(s, 2, values);
@@ -132,90 +132,82 @@ void readfile(const char *filename)
                 }
                 else if (cmd == "vertex")
                 {
-                    validinput = readvals(s,3,values);
+                    validinput = readvals(s, 3, values);
 
-                    if(validinput)
+                    if (validinput)
                     {
-                        vertexes.push_back(vec3(values[0],values[1],values[2]));
-
+                        vertexes.push_back(vec3(values[0], values[1], values[2]));
                     }
                 }
-                else if(cmd == "point") {
-                    if (numused == numLights) { // No more Lights 
+                else if (cmd == "point")
+                {
+                    if (numused == numLights)
+                    { // No more Lights
                         cerr << "Reached Maximum Number of Lights " << numused << " Will ignore further lights\n";
                     }
-                    else {
+                    else
+                    {
                         validinput = readvals(s, 6, values); // Position/color for lts.
-                        if (validinput) {
+                        if (validinput)
+                        {
 
-                            for (int i = 0; i < 3; i++) {
+                            for (int i = 0; i < 3; i++)
+                            {
                                 lightposn[i + numused * 4] = values[i];
-                                
                             }
                             lightposn[3 + numused * 4] = 1;
-                            for (int j = 0; j < 3; j++) {
+                            for (int j = 0; j < 3; j++)
+                            {
                                 lightcolor[j + numused * 3] = values[j + 3];
                             }
                             ++numused;
                         }
                     }
                 }
-                else if(cmd == "point") {
-                    if (numused == numLights) { // No more Lights 
+                else if (cmd == "directional")
+                {
+                    if (numused == numLights)
+                    { // No more Lights
                         cerr << "Reached Maximum Number of Lights " << numused << " Will ignore further lights\n";
                     }
-                    else {
+                    else
+                    {
                         validinput = readvals(s, 6, values); // Position/color for lts.
-                        if (validinput) {
-
-                            for (int i = 0; i < 3; i++) {
+                        if (validinput)
+                        {
+                            
+                            for (int i = 0; i < 3; i++)
+                            {
                                 lightposn[i + numused * 4] = values[i];
-                                
-                            }
-                            lightposn[3 + numused * 4] = 1;
-                            for (int j = 0; j < 3; j++) {
-                                lightcolor[j + numused * 3] = values[j + 3];
-                            }
-                            ++numused;
-                        }
-                    }
-                }
-                else if (cmd == "dirctional") {
-                    if (numused == numLights) { // No more Lights 
-                    cerr << "Reached Maximum Number of Lights " << numused << " Will ignore further lights\n";
-                    }
-                    else {
-                        validinput = readvals(s, 6, values); // Position/color for lts.
-                        if (validinput) {
-
-                            for (int i = 0; i < 3; i++) {
-                            lightposn[i + numused * 4] = values[i];
 
                             }
                             lightposn[3 + numused * 4] = 0;
-                            for (int j = 0; j < 3; j++) {
-                                lightcolor[j + numused * 4] = values[j + 4];
+                            for (int j = 0; j < 3; j++)
+                            {
+                                lightcolor[j + numused * 3] = values[j + 3];
+
                             }
-                            lightcolor[3 + numused * 4] = 0;
                             ++numused;
                         }
                     }
                 }
-                else if (cmd == "tri") {
-                    validinput = readvals(s,3,values);
+                else if (cmd == "tri")
+                {
+                    validinput = readvals(s, 3, values);
                     if (validinput)
                     {
-                        
+
                         obj.push_back(new triangle(tri, ambient, diffuse, specular, emission, shininess,
-                                               vertexes[values[0]], vertexes[values[1]], vertexes[values[2]]));
+                                                   vertexes[values[0]], vertexes[values[1]], vertexes[values[2]]));
                     }
-                    
-                }else if (cmd== "sphere"){
-                    validinput = readvals(s,4,values);
-                    if (validinput){
+                }
+                else if (cmd == "sphere")
+                {
+                    validinput = readvals(s, 4, values);
+                    if (validinput)
+                    {
                         obj.push_back(new sphere(sph, ambient, diffuse, specular, emission, shininess,
-                                                 vec3(values[0], values[1], values[2]),values[3]
-                                                 ));
+                                                 vec3(values[0], values[1], values[2]), values[3]));
                     }
                 }
             }
