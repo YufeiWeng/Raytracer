@@ -21,7 +21,7 @@ bool readvals(stringstream &s, const int numvals, float *values)
 
 void readfile(const char *filename)
 {
-    ambient[0]=0.0; ambient[1]=0.0; ambient[2]=0.0;
+    ambient[0]=0.2; ambient[1]=0.2; ambient[2]=0.2;
     diffuse[0]=0.0; diffuse[1]=0.0; diffuse[2]=0.0;
     specular[0]=0.0; specular[1]=0.0; specular[2]=0.0;
     emission[0]=0.0; emission[1]=0.0; emission[2]=0.0;
@@ -140,24 +140,63 @@ void readfile(const char *filename)
 
                     }
                 }
-                else if(cmd == "light") {
+                else if(cmd == "point") {
                     if (numused == numLights) { // No more Lights 
                         cerr << "Reached Maximum Number of Lights " << numused << " Will ignore further lights\n";
                     }
                     else {
-                        validinput = readvals(s, 8, values); // Position/color for lts.
+                        validinput = readvals(s, 6, values); // Position/color for lts.
                         if (validinput) {
 
-                            // YOUR CODE FOR HW 2 HERE. 
-                            // Note that values[0...7] shows the read in values 
-                            // Make use of lightposn[] and lightcolor[] arrays in variables.h
-                            // Those arrays can then be used in display too.  
-                            for (int i = 0; i < 4; i++) {
+                            for (int i = 0; i < 3; i++) {
                                 lightposn[i + numused * 4] = values[i];
+                                
                             }
-                            for (int j = 0; j < 4; j++) {
+                            lightposn[3 + numused * 4] = 1;
+                            for (int j = 0; j < 3; j++) {
+                                lightcolor[j + numused * 3] = values[j + 3];
+                            }
+                            ++numused;
+                        }
+                    }
+                }
+                else if(cmd == "point") {
+                    if (numused == numLights) { // No more Lights 
+                        cerr << "Reached Maximum Number of Lights " << numused << " Will ignore further lights\n";
+                    }
+                    else {
+                        validinput = readvals(s, 6, values); // Position/color for lts.
+                        if (validinput) {
+
+                            for (int i = 0; i < 3; i++) {
+                                lightposn[i + numused * 4] = values[i];
+                                
+                            }
+                            lightposn[3 + numused * 4] = 1;
+                            for (int j = 0; j < 3; j++) {
+                                lightcolor[j + numused * 3] = values[j + 3];
+                            }
+                            ++numused;
+                        }
+                    }
+                }
+                else if (cmd == "dirctional") {
+                    if (numused == numLights) { // No more Lights 
+                    cerr << "Reached Maximum Number of Lights " << numused << " Will ignore further lights\n";
+                    }
+                    else {
+                        validinput = readvals(s, 6, values); // Position/color for lts.
+                        if (validinput) {
+
+                            for (int i = 0; i < 3; i++) {
+                            lightposn[i + numused * 4] = values[i];
+
+                            }
+                            lightposn[3 + numused * 4] = 0;
+                            for (int j = 0; j < 3; j++) {
                                 lightcolor[j + numused * 4] = values[j + 4];
                             }
+                            lightcolor[3 + numused * 4] = 0;
                             ++numused;
                         }
                     }

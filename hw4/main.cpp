@@ -166,33 +166,67 @@ object *Intersection(vector<object *> &objList, Ray &ray)
     return closest;
 }
 
+
+
+
 /*
  *compute color; need further implements
  */
-vec3 ComputeColor(object *closest)
+vec3 ComputeColor(object *closest, Ray& ray)
 {
-    vec3 color(0.0, 0.0, 0.0);
+    vec3 finalcolor(0.0, 0.0, 0.0);
     if (closest == nullptr)
     {
-        return color;
+        return finalcolor;
     }
     else
     {
         // cout << "notnull" << endl;
         // return vec3(1.0, 0.0, 0.0);
-        return closest->_ambient;
+        vec3 normal;
+        if (closest->_type == tri) {
+            triangle* tri = (triangle*)closest;
+            normal = tri->findNormal();
+        }
+        for (int i = 0; i < numused; i++) {
+            vec3 eyedirn = ray.dir; //???
+            vec3 diffuse = closest->_diffuse;
+            vec3 specular = closest->_specular;
+            float shininess = closest->_shininess;
+            vec3 position;
+            vec3 direction;
+            vec3 myhalf;
+            vec4 color = vec4(lightcolor[4*i], lightcolor[4*i+1], lightcolor[4 * i + 2], lightcolor[4 * i + 3]);
+            vec4 lightposn = vec4(lightposn[4 * i], lightposn[4 * i + 1], lightposn[4 * i + 2], lightposn[4 * i + 3]);
+            if (lightposn.w == 0) {   //directional 
+                direction = vec3(lightposn[4 * i], lightposn[4 * i + 1], lightposn[4 * i + 2]);
+                direction = normalize(direction);
+                myhalf = normalize(direction + eyedirn);
+            }
+            else {     //point???
+                position = lightposn[i].xyz / lightposn[i].w;
+                direction = normalize(position - mypos);
+                myhalf = normalize(direction + eyedirn);
+            }
+            vec3 col = ComputeLight(direction, color, normal, myhalf, diffuse, specular, shininess);
+            finalcolor += color;
+        }
+
+
+        finalcolor += ambient;
+        return finalcolor;
     }
 }
 
-vec4 ComputeLight(const vec3 direction, const vec4 lightcolor, const vec3 normal, const vec3 halfvec, const vec4 mydiffuse, const vec4 myspecular, const float myshininess) {
+vec3 ComputeLight(const vec3 direction, const vec3 lightcolor, const vec3 normal, const vec3 halfvec, const vec3 mydiffuse, const vec3 myspecular, const float myshininess) {
 
     float nDotL = dot(normal, direction);
-    vec4 lambert = mydiffuse * lightcolor * max(nDotL, float(0.0));
+    vec3 lambert = mydiffuse * lightcolor * max(nDotL, float(0.0));
 
     float nDotH = dot(normal, halfvec);
-    vec4 phong = myspecular * lightcolor * pow(max(nDotH, float(0.0)), myshininess);
+    vec3 phong = myspecular * lightcolor * pow(max(nDotH, float(0.0)), myshininess);
 
-    vec4 retval = lambert + phong;
+    vec3 retval = lambert + phong;
     return retval;
 }
 
@@ -217,7 +251,7 @@ int main(int argc, char *argv[])
             Ray ray(i, j);
             vec3 color(0.0, 0.0, 0.0);
             object *hit = Intersection(obj, ray);
-            color = ComputeColor(hit);
+            color = ComputeColor(hit, ray);
             cout << static_cast<int>(255.999 * color.x) << ' '
                  << static_cast<int>(255.999 * color.y) << ' '
                  << static_cast<int>(255.999 * color.z) << '\n';
