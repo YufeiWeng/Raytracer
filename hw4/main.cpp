@@ -184,6 +184,18 @@ vec3 ComputeColor(object *closest)
     }
 }
 
+vec4 ComputeLight(const vec3 direction, const vec4 lightcolor, const vec3 normal, const vec3 halfvec, const vec4 mydiffuse, const vec4 myspecular, const float myshininess) {
+
+    float nDotL = dot(normal, direction);
+    vec4 lambert = mydiffuse * lightcolor * max(nDotL, float(0.0));
+
+    float nDotH = dot(normal, halfvec);
+    vec4 phong = myspecular * lightcolor * pow(max(nDotH, float(0.0)), myshininess);
+
+    vec4 retval = lambert + phong;
+    return retval;
+}
+
 int main(int argc, char *argv[])
 {
 
