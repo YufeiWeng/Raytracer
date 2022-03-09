@@ -11,6 +11,7 @@ struct hit_record
     Ray p;
     float t;
     object *target;
+    vec3 point;
 };
 /*
  * Return a boolean
@@ -169,6 +170,7 @@ hit_record Intersection(const vector<object *> &objList, const Ray &ray)
                 t_min = t_value; // update t_min
                 output.target = closest;
                 output.t = t_min;
+                output.point=newray.ori+newray.dir*output.t;
             }
         }
         else
@@ -183,11 +185,12 @@ hit_record Intersection(const vector<object *> &objList, const Ray &ray)
                 t_min = t_value; // update t_min
                 output.target = closest;
                 output.t = t_min;
+                output.point = newray.ori + newray.dir * output.t;
             }
         }
     }
     output.p = ray;
-
+    
     return output;
 }
 
@@ -221,8 +224,7 @@ vec3 ComputeColor(hit_record closest)
         // cout << "notnull" << endl;
         // return vec3(1.0, 0.0, 0.0);
         vec3 normal;
-        vec3 intP=closest.p.at(closest.t);
-        intP = vec3(closest.target->_transform * vec4(intP,1.0f));
+        vec3 intP = vec3(closest.target->_transform * vec4(closest.point, 0.0f));
         // closest.p.dir = vec3(output.target->_transform * vec4(ray.dir, 0.0f));
         // closest.p.ori = vec3(output.target->_transform * vec4(ray.ori, 1.0f));
         if (closest.target->_type == tri)
@@ -233,11 +235,13 @@ vec3 ComputeColor(hit_record closest)
             sphere *sph = (sphere *)closest.target;
             normal = sph->findNormal(intP);
         }
-        normal = vec3(transpose(inverse(closest.target->_transform)) * vec4(normal, 1.0f));
+        normal = normalize(vec3(inverse(transpose(closest.target->_transform)) * vec4(normal, 0.0f)));
         for (int i = 0; i < numused; i++)
         {
-            vec3 eyedirn = closest.t * closest.p.dir; //???
+            vec3 eyedirn = normalize(closest.p.ori-intP); //???
+            
             vec3 diffuse = closest.target->_diffuse;
+            // cout<<diffuse[0]<<diffuse[1]<<diffuse[2]<<endl;
             vec3 specular = closest.target->_specular;
             float shininess = closest.target->_shininess;
             vec3 position;
@@ -256,6 +260,7 @@ vec3 ComputeColor(hit_record closest)
                 position = vec3(lightposn[4 * i], lightposn[4 * i + 1], lightposn[4 * i + 2]) / lightposn[4 * i + 3];
                 direction = normalize(position - intP);
                 myhalf = normalize(direction + eyedirn);
+                // color = color / powf(distance(intP, position),2);
             }
             vec3 col = ComputeLight(direction, color, normal, myhalf, diffuse, specular, shininess);
             finalcolor = finalcolor + col;
@@ -290,6 +295,8 @@ int main(int argc, char *argv[])
     float w = result[3];*/
 
     readfile(argv[1]);
+    // cout<< lightcolor[0] <<lightcolor[1]<<lightcolor[2]<<endl;
+    // cout << lightposn[0] << lightposn[1] << lightposn[2] << endl;
 
     std::cout << "P3\n"
               << image_width << ' ' << image_height << "\n255\n";
