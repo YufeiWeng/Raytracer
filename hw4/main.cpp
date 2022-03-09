@@ -210,6 +210,7 @@ vec3 ComputeLight(const vec3 direction, const vec3 lightcolor, const vec3 normal
     return retval;
 }
 
+//if shadow return 0
 float computeV(vec3& intP, vec4& lightDir) {
     Ray ray;
     ray.ori = intP;
