@@ -77,5 +77,5 @@ public:
            const mat4 &Transfrom,
            const vec3 &C,
            float r);
-    vec3 findNormal(vec3 p);
+    vec3 findNormal(const vec3 &p);
 };

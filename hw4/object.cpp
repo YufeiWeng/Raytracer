@@ -78,6 +78,6 @@ sphere::sphere(const shape &type,
     _center=C;
     _radius=r;
 }
-vec3 sphere::findNormal(vec3 p){
+vec3 sphere::findNormal(const vec3 &p){
     return normalize(p - _center);
 }
