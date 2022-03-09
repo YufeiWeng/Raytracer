@@ -10,6 +10,7 @@ public:
 
 public:
     vec3 at(double t) const;
+    Ray();
     Ray(int i, int j);
 
     Ray(const vec3 origin, const vec3 direction);

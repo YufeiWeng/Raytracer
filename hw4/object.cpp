@@ -52,6 +52,11 @@ triangle::triangle(const shape &type,
     _C=C_;
 
 }
+vec3 triangle::findNormal() {
+    vec3 normal = cross((_C - _A), (_B - _A));
+    normal = (-1.0f)*glm::normalize(normal);
+    return normal;
+}
 
 
 sphere::sphere(const shape &type,

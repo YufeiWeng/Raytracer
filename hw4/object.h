@@ -54,7 +54,7 @@ public:
              const vec3 &A_,
              const vec3 &B_,
              const vec3 &C_);
-    // glm::vec3 hit(const Ray &ray);
+    vec3 findNormal();
 };
 
 class sphere : public object

@@ -29,4 +29,9 @@ const vec3 A(2.0, 4.0, 1.0);
 const vec3 B(0.0, 0.0, 1.0);
 const vec3 C(0.0, -1.0, 3.0);
 
+const int numLights = 10;
+EXTERN float lightposn[4 * numLights]; // Light Positions
+EXTERN float lightcolor[3 * numLights]; // Light Colors
+EXTERN float lightransf[4 * numLights]; // Lights transformed by modelview
+EXTERN int numused;                     // How many lights are used
 

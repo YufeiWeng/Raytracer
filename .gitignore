@@ -371,3 +371,7 @@ hw4/*.o
 hw4/transforms
 
 hw4/*.ppm
+
+hw4/README.md
+
+*.zip
