@@ -9,7 +9,7 @@ public:
     vec3 dir;
 
 public:
-    vec3 at(double t) const;
+    vec3 at(float t) const;
     Ray();
     Ray(int i, int j);
 

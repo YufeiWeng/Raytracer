@@ -1,10 +1,14 @@
 
 #include "variable.h"
 #include "readfile.h"
-
+#include "transform.h"
 // default value t for every object
 // float INF = 35415; //for test
-
+void rightmultiply(const mat4 &M, stack<mat4> &transfstack)
+{
+    mat4 &T = transfstack.top();
+    T = T * M;
+}
 bool readvals(stringstream &s, const int numvals, float *values)
 {
     for (int i = 0; i < numvals; i++)
@@ -35,6 +39,9 @@ void readfile(const char *filename)
     in.open(filename);
     if (in.is_open())
     {
+        stack<mat4> transfstack;
+        transfstack.push(mat4(1.0)); // identity
+
         getline(in, str);
         while (in)
         {
@@ -44,6 +51,7 @@ void readfile(const char *filename)
                 stringstream s(str);
                 float values[10];
                 bool validinput;
+
                 s >> cmd;
                 if (cmd == "size")
                 {
@@ -197,8 +205,8 @@ void readfile(const char *filename)
                     if (validinput)
                     {
 
-                        obj.push_back(new triangle(tri, ambient, diffuse, specular, emission, shininess,
-                                                   vertexes[values[0]], vertexes[values[1]], vertexes[values[2]]));
+                        obj.push_back(new triangle(tri, ambient, diffuse, specular, emission, shininess, transfstack.top(),
+                                                   vertexes[values[2]], vertexes[values[1]], vertexes[values[0]]));
                     }
                 }
                 else if (cmd == "sphere")
@@ -206,8 +214,49 @@ void readfile(const char *filename)
                     validinput = readvals(s, 4, values);
                     if (validinput)
                     {
-                        obj.push_back(new sphere(sph, ambient, diffuse, specular, emission, shininess,
+                        obj.push_back(new sphere(sph, ambient, diffuse, specular, emission, shininess, transfstack.top(),
                                                  vec3(values[0], values[1], values[2]), values[3]));
+                    }
+                }
+                else if (cmd == "translate"){
+                    validinput = readvals(s, 3, values);
+                    if (validinput)
+                    {
+                        mat4 tr = Transform::translate(values[0], values[1], values[2]);
+                        rightmultiply(tr, transfstack);
+                    }
+                }else if (cmd == "scale"){
+                    validinput = readvals(s, 3, values);
+                    if (validinput)
+                    {
+
+                        mat4 sc = Transform::scale(values[0], values[1], values[2]);
+
+                        rightmultiply(sc, transfstack);
+                    }
+                }
+                else if (cmd == "rotate")
+                {
+                    validinput = readvals(s, 4, values);
+                    if (validinput)
+                    {
+                        mat4 ro = mat4(Transform::rotate(values[3], vec3(values[0], values[1], values[2])));
+                        rightmultiply(ro, transfstack);
+                    }
+                }
+                else if (cmd == "pushTransform")
+                {
+                    transfstack.push(transfstack.top());
+                }
+                else if (cmd == "popTransform")
+                {
+                    if (transfstack.size() <= 1)
+                    {
+                        cerr << "Stack has no elements.  Cannot Pop\n";
+                    }
+                    else
+                    {
+                        transfstack.pop();
                     }
                 }
             }

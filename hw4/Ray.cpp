@@ -1,6 +1,6 @@
 #include "Ray.h"
 Ray::Ray(){
-	ori=vec3(0.0,0.0,0.0);
+	ori = vec3(0.0,0.0,0.0);
 	dir = vec3(0.0, 0.0, 0.0);
 }
 Ray::Ray(const vec3 origin, const vec3 direction) {
@@ -19,9 +19,7 @@ Ray::Ray(int i, int j){
 	ori = eye;
 }
 
-
-vec3 Ray::at(double t) const {
-	return ori + float(t) * dir;
+vec3 Ray::at(float t) const
+{
+	return ori + t * dir;
 }
-
-

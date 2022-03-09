@@ -4,6 +4,7 @@
 #include "readfile.h"
 #include <iostream>
 #include <glm/glm.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include <glm/gtc/matrix_transform.hpp> //If there are redlines, go and check: https://www.google.com/search?q=how+to+include+glm+in+visual+studio+2019&ei=tbkeYuH6BZrHkPIPgMex2A0&ved=0ahUKEwihqa6plab2AhWaI0QIHYBjDNsQ4dUDCA4&uact=5&oq=how+to+include+glm+in+visual+studio+2019&gs_lcp=Cgdnd3Mtd2l6EAMyBQghEKsCOgcIABBHELADOgYIABAWEB46BQgAEIYDOgUIIRCgAUoECEEYAEoECEYYAFCyBVj-C2D3DmgBcAF4AYAB9AGIAYcGkgEFMC40LjGYAQCgAQHIAQjAAQE&sclient=gws-wiz#kpvalbx=_u7keYvz9FrefkPIPt8SO8Aw20
 struct hit_record
 {
@@ -143,11 +144,22 @@ hit_record Intersection(const vector<object *> &objList, const Ray &ray)
     output.t = -1.0;
     for (int k = 0; k < objList.size(); k++)
     {
+
+        vec3 newdir = vec3(inverse(objList[k]->_transform) * vec4(ray.dir, 0.0f));
+        vec3 newori = vec3(inverse(objList[k]->_transform) * vec4(ray.ori, 1.0f));
+        // if (k == 12)
+        // {   
+        //     cout<<"ori "<<glm::to_string(ray.dir)<<endl;
+        //     std::cout << glm::to_string(inverse(objList[k]->_transform)) << std::endl;
+        //     cout << "new " << glm::to_string(inverse(objList[k]->_transform) * vec4(ray.dir, 0.0f)) << endl;
+        // }
+        Ray newray;
+        newray.dir=newdir; newray.ori=newdir;
         if (objList[k]->_type == tri)
         {
             triangle *tri = (triangle *)objList[k]; // how to get tri
             // check if ray hits the tri
-            float t_value = hit_triangle(tri, ray);
+            float t_value = hit_triangle(tri, newray);
 
             // if tri is closer
             if (t_value < t_min && t_value > 0)
@@ -162,7 +174,7 @@ hit_record Intersection(const vector<object *> &objList, const Ray &ray)
         else
         {
             sphere *sph = (sphere *)objList[k];
-            float t_value = hit_sphere(sph, ray);
+            float t_value = hit_sphere(sph, newray);
 
             // if sph is closer
             if (t_value < t_min && t_value > 0)
@@ -175,6 +187,7 @@ hit_record Intersection(const vector<object *> &objList, const Ray &ray)
         }
     }
     output.p = ray;
+
     return output;
 }
 
@@ -208,14 +221,19 @@ vec3 ComputeColor(hit_record closest)
         // cout << "notnull" << endl;
         // return vec3(1.0, 0.0, 0.0);
         vec3 normal;
+        vec3 intP=closest.p.at(closest.t);
+        intP = vec3(closest.target->_transform * vec4(intP,1.0f));
+        // closest.p.dir = vec3(output.target->_transform * vec4(ray.dir, 0.0f));
+        // closest.p.ori = vec3(output.target->_transform * vec4(ray.ori, 1.0f));
         if (closest.target->_type == tri)
         {
             triangle *tri = (triangle *)closest.target;
             normal = tri->findNormal();
         }else{
             sphere *sph = (sphere *)closest.target;
-            normal = sph->findNormal((closest.p.ori + closest.t * closest.p.dir));
+            normal = sph->findNormal(intP);
         }
+        normal = vec3(transpose(inverse(closest.target->_transform)) * vec4(normal, 1.0f));
         for (int i = 0; i < numused; i++)
         {
             vec3 eyedirn = closest.t * closest.p.dir; //???
@@ -236,7 +254,7 @@ vec3 ComputeColor(hit_record closest)
             else
             { // point???
                 position = vec3(lightposn[4 * i], lightposn[4 * i + 1], lightposn[4 * i + 2]) / lightposn[4 * i + 3];
-                direction = normalize(position - (closest.p.ori + closest.t * closest.p.dir));
+                direction = normalize(position - intP);
                 myhalf = normalize(direction + eyedirn);
             }
             vec3 col = ComputeLight(direction, color, normal, myhalf, diffuse, specular, shininess);
