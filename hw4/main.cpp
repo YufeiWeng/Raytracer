@@ -154,7 +154,7 @@ hit_record Intersection(const vector<object *> &objList, const Ray &ray)
         //     cout << "new " << glm::to_string(inverse(objList[k]->_transform) * vec4(ray.dir, 0.0f)) << endl;
         // }
         Ray newray;
-        newray.dir=newdir; newray.ori=newdir;
+        newray.dir=newdir; newray.ori=newori;
         if (objList[k]->_type == tri)
         {
             triangle *tri = (triangle *)objList[k]; // how to get tri
