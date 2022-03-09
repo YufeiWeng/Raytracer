@@ -5,7 +5,8 @@ object::object(const shape &type,
                float *diffuse,
                float *specular,
                float *emission,
-               float &shininess)
+               float &shininess,
+               const mat4& Transfrom)
 {
     _type=type;
     _ambient[0] = ambient[0];
@@ -25,7 +26,7 @@ object::object(const shape &type,
     _emission[2] = emission[2];
     //_emission[3] = 1.0;
     _shininess = shininess;
-
+    _transform = Transfrom;
 }
 
 triangle::triangle(const shape &type,
@@ -34,16 +35,16 @@ triangle::triangle(const shape &type,
                    float *specular,
                    float *emission,
                    float &shininess,
-
+                   const mat4 &Transfrom,
                    const vec3 &A_,
                    const vec3 &B_,
                    const vec3 &C_) : object(type,
-                                          ambient,
-                                          diffuse,
-                                          specular,
-                                          emission,
-                                          shininess
-                                          )
+                                            ambient,
+                                            diffuse,
+                                            specular,
+                                            emission,
+                                            shininess,
+                                            Transfrom)
 {
 
 
@@ -54,10 +55,9 @@ triangle::triangle(const shape &type,
 }
 vec3 triangle::findNormal() {
     vec3 normal = cross((_C - _A), (_B - _A));
-    normal = (-1.0f)*glm::normalize(normal);
+    normal =glm::normalize(normal); //change to negative
     return normal;
 }
-
 
 sphere::sphere(const shape &type,
                float *ambient,
@@ -65,15 +65,19 @@ sphere::sphere(const shape &type,
                float *specular,
                float *emission,
                float &shininess,
+               const mat4 &Transfrom,
                const vec3 &C,
                float r) : object(type,
                                  ambient,
                                  diffuse,
                                  specular,
                                  emission,
-                                 shininess
-                                 )
+                                 shininess,
+                                Transfrom)
 {
     _center=C;
     _radius=r;
+}
+vec3 sphere::findNormal(const vec3 &p){
+    return normalize(p - _center);
 }
