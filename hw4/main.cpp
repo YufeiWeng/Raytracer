@@ -212,6 +212,9 @@ vec3 ComputeColor(hit_record closest)
         {
             triangle *tri = (triangle *)closest.target;
             normal = tri->findNormal();
+        }else{
+            sphere *sph = (sphere *)closest.target;
+            normal = sph->findNormal((closest.p.ori + closest.t * closest.p.dir));
         }
         for (int i = 0; i < numused; i++)
         {

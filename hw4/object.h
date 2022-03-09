@@ -73,4 +73,5 @@ public:
            float &shininess,
            const vec3 &C,
            float r);
+    vec3 findNormal(vec3 p);
 };
