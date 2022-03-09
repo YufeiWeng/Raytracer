@@ -11,9 +11,7 @@ struct hit_record
     Ray p;
     float t;
     vec3 point;
-    vec3 pointBefore;
     object *target;
-    vec3 point;
 };
 /*
  * Return a boolean
@@ -236,7 +234,7 @@ vec3 ComputeColor(hit_record closest)
             normal = tri->findNormal();
         }else{
             sphere *sph = (sphere *)closest.target;
-            normal = sph->findNormal(closest.pointBefore); //need 
+            normal = sph->findNormal(closest.point); //need 
         }
         normal = normalize(vec3(inverse(transpose(closest.target->_transform)) * vec4(normal, 0.0f)));
         for (int i = 0; i < numused; i++)
