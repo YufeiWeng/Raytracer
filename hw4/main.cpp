@@ -233,7 +233,7 @@ vec3 ComputeColor(hit_record closest)
             normal = tri->findNormal();
         }else{
             sphere *sph = (sphere *)closest.target;
-            normal = sph->findNormal(intP);
+            normal = sph->findNormal(closest.point);
         }
         normal = normalize(vec3(inverse(transpose(closest.target->_transform)) * vec4(normal, 0.0f)));
         for (int i = 0; i < numused; i++)
@@ -260,7 +260,7 @@ vec3 ComputeColor(hit_record closest)
                 position = vec3(lightposn[4 * i], lightposn[4 * i + 1], lightposn[4 * i + 2]) / lightposn[4 * i + 3];
                 direction = normalize(position - intP);
                 myhalf = normalize(direction + eyedirn);
-                // color = color / powf(distance(intP, position),2);
+                // color = color / powf(distance(position,intP),2);
             }
             vec3 col = ComputeLight(direction, color, normal, myhalf, diffuse, specular, shininess);
             finalcolor = finalcolor + col;
