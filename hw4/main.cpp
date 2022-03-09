@@ -210,6 +210,27 @@ vec3 ComputeLight(const vec3 direction, const vec3 lightcolor, const vec3 normal
     return retval;
 }
 
+float computeV(vec3& intP, vec4& lightDir) {
+    Ray ray;
+    ray.ori = intP;
+    //if directional
+    if (lightDir[3] == 0) {
+        ray.dir = normalize(-vec3(lightDir[0], lightDir[1], lightDir[2]));
+    }
+    //point
+    else {
+        ray.dir = normalize(vec3(lightDir) - intP);
+    }
+    hit_record h = Intersection(obj, ray);
+    if (h.t == -1) {
+        return 0.0;
+    }
+    else {
+        return 1.0;
+    }
+
+}
+
 /*
  *compute color; need further implements
  */
@@ -247,10 +268,15 @@ vec3 ComputeColor(hit_record closest)
             float shininess = closest.target->_shininess;
             vec3 position;
             vec3 direction;
+            vec4 lightDir;
             vec3 myhalf;
             vec3 color = vec3(lightcolor[3 * i], lightcolor[3 * i + 1], lightcolor[3 * i + 2]);
             direction = vec3(lightposn[4 * i], lightposn[4 * i + 1], lightposn[4 * i + 2]);
-
+            lightDir = vec4(lightposn[4 * i], lightposn[4 * i + 1], lightposn[4 * i + 2], lightposn[4 * i + 3]);
+            //if under shadow with this light, go next 
+            if (computeV(intP, lightDir) == 0) {
+                continue;
+            }
             if (lightposn[4 * i + 3] == 0)
             { // directional
                 direction = normalize(direction);
@@ -273,6 +299,8 @@ vec3 ComputeColor(hit_record closest)
         return finalcolor;
     }
 }
+
+
 
 int main(int argc, char *argv[])
 {
