@@ -225,7 +225,7 @@ vec3 ComputeColor(hit_record closest)
         // cout << "notnull" << endl;
         // return vec3(1.0, 0.0, 0.0);
         vec3 normal;
-        vec3 intP = vec3(closest.target->_transform * vec4(closest.point, 0.0f));
+        vec3 intP = vec3(closest.target->_transform * vec4(closest.point, 1.0f));
         // closest.p.dir = vec3(output.target->_transform * vec4(ray.dir, 0.0f));
         // closest.p.ori = vec3(output.target->_transform * vec4(ray.ori, 1.0f));
         if (closest.target->_type == tri)
@@ -259,7 +259,7 @@ vec3 ComputeColor(hit_record closest)
             else
             { // point???
                 position = vec3(lightposn[4 * i], lightposn[4 * i + 1], lightposn[4 * i + 2]) / lightposn[4 * i + 3];
-                direction = normalize(position - closest.point);
+                direction = normalize(position - intP);
                 myhalf = normalize(direction + eyedirn);
                 // color = color / powf(distance(intP, position),2);
             }
