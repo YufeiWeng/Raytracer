@@ -55,7 +55,7 @@ triangle::triangle(const shape &type,
 }
 vec3 triangle::findNormal() {
     vec3 normal = cross((_C - _A), (_B - _A));
-    normal =glm::normalize(normal);
+    normal =glm::normalize(-normal); //change to negative
     return normal;
 }
 
