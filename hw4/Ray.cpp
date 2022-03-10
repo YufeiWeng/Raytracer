@@ -8,7 +8,7 @@ Ray::Ray(const vec3 origin, const vec3 direction) {
 	dir = direction;
 }
    
-Ray::Ray(int i, int j){
+Ray::Ray(float i, float j){
 	vec3 u, w, v;
     w = glm::normalize(eye-center);
     u = glm::normalize(glm::cross(up, w));

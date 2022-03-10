@@ -11,7 +11,7 @@ public:
 public:
     vec3 at(float t) const;
     Ray();
-    Ray(int i, int j);
+    Ray(float i, float j);
 
     Ray(const vec3 origin, const vec3 direction);
 };
