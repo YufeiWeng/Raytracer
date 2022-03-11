@@ -30,6 +30,7 @@ void readfile(const char *filename)
     specular[0] = 0.0;specular[1] = 0.0;specular[2] = 0.0;
     emission[0] = 0.0;emission[1] = 0.0;emission[2] = 0.0;
     shininess = 0.0;
+    attenuation[0] = 1.0; attenuation[1] = 0.0; attenuation[2] = 0.0;
 
     string str, cmd;
     ifstream in;
@@ -136,6 +137,12 @@ void readfile(const char *filename)
                     if (validinput)
                     {
                         shininess = values[0];
+                    }
+                }
+                else if (cmd == "attenuation") {
+                    validinput = readvals(s, 3, values);
+                    for (int i = 0; i < 3; i++) {
+                        attenuation[i] = values[i];
                     }
                 }
                 else if (cmd == "vertex")
