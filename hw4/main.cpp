@@ -215,7 +215,6 @@ float computeV(vec3& intP, vec4& lightDir) {
     Ray ray;
     ray.ori = intP + (float(0.0001) * normalize(ray.dir));
     //if directional
-    ray.ori = intP + 0.001f * normalize(vec3(lightDir));
     if (lightDir[3] == 0) {
         ray.dir = normalize(vec3(lightDir[0], lightDir[1], lightDir[2]));
     }
