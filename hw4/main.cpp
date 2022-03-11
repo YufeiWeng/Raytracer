@@ -27,7 +27,8 @@ float hit_triangle(triangle *tri, const Ray &ray)
     glm::vec3 P = ray.at(t);
     if (glm::dot(ray.dir, normal) == 0)
     {
-        return -1;
+
+        return -1.0;
     }
 
     vec3 Apnormal, Bpnormal, Cpnormal;
@@ -162,7 +163,7 @@ hit_record Intersection(const vector<object *> &objList, const Ray &ray)
             triangle *tri = (triangle *)objList[k]; // how to get tri
             // check if ray hits the tri
             float t_value = hit_triangle(tri, newray);
-
+            // cout<<t_value<<endl;
             // if tri is closer
             if (t_value < t_min && t_value > 0)
             {
@@ -213,24 +214,51 @@ vec3 ComputeLight(const vec3 direction, const vec3 lightcolor, const vec3 normal
 //if shadow return 0
 float computeV(vec3& intP, vec4& lightDir) {
     Ray ray;
-    ray.ori = intP + (float(0.0001) * normalize(ray.dir));
+    ray.ori = intP + (float(0.000000012) *vec3(lightDir[0], lightDir[1], lightDir[2]));
+    // ray.ori=intP;
     //if directional
+
     if (lightDir[3] == 0) {
         ray.dir = normalize(vec3(lightDir[0], lightDir[1], lightDir[2]));
+        // hit_record h = Intersection(obj, ray);
+
+        // if (h.t < 0.0001 )
+        // {
+        //     return 1.0;
+        // }
+        // else
+        // {
+        //     return 0.0;
+        // }
     }
     //point
     else {
-        ray.dir = normalize(vec3(lightDir) - ray.ori);
+        ray.dir = normalize(vec3(lightDir[0], lightDir[1], lightDir[2]) - ray.ori);
+        float t_between = distance(ray.ori, vec3(lightDir[0], lightDir[1], lightDir[2]));
+        hit_record h = Intersection(obj, ray);
+        // cout << ray.ori[0] << ray.ori[1] << ray.ori[2] << endl;
+        // cout << t_between << endl;
+        if (h.t<0.00001 || h.t > t_between)
+        {
+            return 1.0;
+        }
+        else
+        {
+            return 0.0;
+        }
     }
-    
-
     hit_record h = Intersection(obj, ray);
-    if (h.t < 0.0007) {
+
+    if (h.t < 0.001)
+    {
         return 1.0;
     }
-    else {
+    else
+    {
         return 0.0;
     }
+    // for (int i =0;i<)
+
 
 }
 
@@ -280,6 +308,7 @@ vec3 ComputeColor(hit_record closest)
             if (computeV(intP, lightDir) == 0) {
                 continue;
             }
+
             if (lightposn[4 * i + 3] == 0)
             { // directional
                 direction = normalize(direction);
