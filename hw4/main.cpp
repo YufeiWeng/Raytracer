@@ -225,7 +225,7 @@ float computeV(vec3& intP, vec4& lightDir) {
     }
 
     hit_record h = Intersection(obj, ray);
-    if (h.t < 0) {
+    if (h.t < 0.0007) {
         return 1.0;
     }
     else {
@@ -264,7 +264,7 @@ vec3 ComputeColor(hit_record closest)
         for (int i = 0; i < numused; i++)
         {
             vec3 eyedirn = normalize(closest.p.ori-intP); //???
-            
+            vec3 col;
             vec3 diffuse = closest.target->_diffuse;
             // cout<<diffuse[0]<<diffuse[1]<<diffuse[2]<<endl;
             vec3 specular = closest.target->_specular;
@@ -284,15 +284,17 @@ vec3 ComputeColor(hit_record closest)
             { // directional
                 direction = normalize(direction);
                 myhalf = normalize(direction + eyedirn);
+                col = ComputeLight(direction, color, normal, myhalf, diffuse, specular, shininess);
             }
             else
             { // point???
                 position = vec3(lightposn[4 * i], lightposn[4 * i + 1], lightposn[4 * i + 2]) / lightposn[4 * i + 3];
                 direction = normalize(position - intP);
                 myhalf = normalize(direction + eyedirn);
-                // color = color / powf(distance(intP, position),2);
+                float dist = distance(closest.point, position);
+                col = ComputeLight(direction, color, normal, myhalf, diffuse, specular, shininess)/ (attenuation[0] + attenuation[1] * dist + attenuation[2] * powf(dist, 2));
             }
-            vec3 col = ComputeLight(direction, color, normal, myhalf, diffuse, specular, shininess);
+            
             finalcolor = finalcolor + col;
         }
         // cout<<finalcolor[0]<<finalcolor[1]<<finalcolor[2]<<endl;
