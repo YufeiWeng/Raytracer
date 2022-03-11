@@ -213,18 +213,19 @@ vec3 ComputeLight(const vec3 direction, const vec3 lightcolor, const vec3 normal
 //if shadow return 0
 float computeV(vec3& intP, vec4& lightDir) {
     Ray ray;
+    ray.ori = intP + (float(0.0001) * normalize(ray.dir));
     //if directional
     if (lightDir[3] == 0) {
-        ray.dir = -normalize(vec3(lightDir[0], lightDir[1], lightDir[2]));
-        ray.ori = intP+ (float(0.001) * ray.dir);
+        ray.dir = normalize(vec3(lightDir[0], lightDir[1], lightDir[2]));
+        
     }
     //point
     else {
         ray.dir = normalize(vec3(lightDir) - intP);
-        ray.ori = intP + (float(0.001) * ray.dir);
     }
+
     hit_record h = Intersection(obj, ray);
-    if (h.t == -1) {
+    if (h.t < 0) {
         return 1.0;
     }
     else {
