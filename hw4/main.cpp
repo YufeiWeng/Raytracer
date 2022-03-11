@@ -238,16 +238,26 @@ float computeV(vec3& intP, vec4& lightDir) {
             return 0.0;
         }
     }
-    
-
+}
+/*
+ *find reflected ray
+ */
+Ray reflect(vec3& N, vec3& point, Ray& input) {
+    Ray output;
+    output.ori = point;
+    output.dir = input.dir - 2 * dot(input.dir, N) * N;
+    return output;
 }
 
 /*
  *compute color; need further implements
  */
-vec3 ComputeColor(hit_record closest)
+vec3 ComputeColor(hit_record closest, int index)
 {
     vec3 finalcolor(0.0, 0.0, 0.0);
+    if (index == 0) {
+        return vec3(0.0, 0.0, 0.0);
+    }
     if (closest.t < 0)
     {
         return finalcolor;
@@ -308,7 +318,11 @@ vec3 ComputeColor(hit_record closest)
         finalcolor = finalcolor + closest.target->_ambient + closest.target->_emission;
         // cout << finalcolor[0] << " " << finalcolor[1] << " " << finalcolor[2] << endl;
 
-        return finalcolor;
+        Ray ref = reflect(normal, closest.point, closest.p);
+        ref.ori = ref.ori + float(0.001) * ref.dir;
+        hit_record nextBounce = Intersection(obj, ref);
+        vec3 specularity = vec3(specular[0], specular[1], specular[2]);
+        return finalcolor + specularity * ComputeColor(nextBounce, index - 1);
     }
 }
 
@@ -349,7 +363,7 @@ int main(int argc, char *argv[])
             Ray ray(i+0.5, j+0.5);
             vec3 color(0.0, 0.0, 0.0);
             hit_record hit = Intersection(obj, ray);
-            color = ComputeColor(hit);
+            color = ComputeColor(hit, maxdepth);
             cout << static_cast<int>(255.999 * color.x) << ' '
                  << static_cast<int>(255.999 * color.y) << ' '
                  << static_cast<int>(255.999 * color.z) << '\n';
