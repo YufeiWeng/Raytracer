@@ -217,19 +217,28 @@ float computeV(vec3& intP, vec4& lightDir) {
     if (lightDir[3] == 0) {
         ray.dir = normalize(vec3(lightDir[0], lightDir[1], lightDir[2]));
         ray.ori = intP+ (float(0.001) * ray.dir);
+        hit_record h = Intersection(obj, ray);
+        if (h.t == -1) {
+            return 1.0;
+        }
+        else {
+            return 0.0;
+        }
     }
     //point
     else {
         ray.dir = normalize(vec3(lightDir) - intP);
         ray.ori = intP + (float(0.001) * ray.dir);
+        hit_record h = Intersection(obj, ray);
+        float t_between = distance(ray.ori, vec3(lightDir[0], lightDir[1], lightDir[2]));
+        if (h.t == -1 || t_between < h.t ) {
+            return 1.0;
+        }
+        else {
+            return 0.0;
+        }
     }
-    hit_record h = Intersection(obj, ray);
-    if (h.t == -1) {
-        return 1.0;
-    }
-    else {
-        return 0.0;
-    }
+    
 
 }
 
@@ -289,7 +298,6 @@ vec3 ComputeColor(hit_record closest)
                 position = vec3(lightposn[4 * i], lightposn[4 * i + 1], lightposn[4 * i + 2]) / lightposn[4 * i + 3];
                 direction = normalize(position - intP);
                 myhalf = normalize(direction + eyedirn);
-                // color = color / powf(distance(intP, position),2);
             }
             vec3 col = ComputeLight(direction, color, normal, myhalf, diffuse, specular, shininess);
             finalcolor = finalcolor + col;
