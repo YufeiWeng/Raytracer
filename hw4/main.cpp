@@ -12,6 +12,8 @@ struct hit_record
     float t;
     vec3 point;
     object *target;
+    vec3 specularity;
+    vec3 normal;
 };
 /*
  * Return a boolean
@@ -252,12 +254,9 @@ Ray reflect(vec3& N, vec3& point, Ray& input) {
 /*
  *compute color; need further implements
  */
-vec3 ComputeColor(hit_record closest, int index)
+vec3 ComputeColor(hit_record closest)
 {
     vec3 finalcolor(0.0, 0.0, 0.0);
-    if (index == 0) {
-        return vec3(0.0, 0.0, 0.0);
-    }
     if (closest.t < 0)
     {
         return finalcolor;
@@ -317,13 +316,29 @@ vec3 ComputeColor(hit_record closest, int index)
         // cout<<finalcolor[0]<<finalcolor[1]<<finalcolor[2]<<endl;
         finalcolor = finalcolor + closest.target->_ambient + closest.target->_emission;
         // cout << finalcolor[0] << " " << finalcolor[1] << " " << finalcolor[2] << endl;
+        closest.normal = normal;
+        vec3 specularity = vec3(specular[0], specular[1], specular[2]);
+        closest.specularity = specularity;
+        return finalcolor;
+    }
+}
 
-        Ray ref = reflect(normal, closest.point, closest.p);
+vec3 startComputeColor(hit_record hit, int index) {
+    hit_record h = hit;
+    if (h.t < 0) { return vec3(0, 0, 0);}
+    vec3 finalcolor(0.0, 0.0, 0.0);
+    finalcolor = ComputeColor(hit);
+    Ray ray = h.p;  
+    int i = index - 1;
+    while (i > 0) {
+        Ray ref = reflect(h.normal, h.point, h.p);
         ref.ori = ref.ori + float(0.001) * ref.dir;
         hit_record nextBounce = Intersection(obj, ref);
-        vec3 specularity = vec3(specular[0], specular[1], specular[2]);
-        return finalcolor + specularity * ComputeColor(nextBounce, index - 1);
+        finalcolor += h.specularity*ComputeColor(nextBounce);
+        h = nextBounce;
+        i -= 1;
     }
+    return finalcolor;
 }
 
 
@@ -363,7 +378,7 @@ int main(int argc, char *argv[])
             Ray ray(i+0.5, j+0.5);
             vec3 color(0.0, 0.0, 0.0);
             hit_record hit = Intersection(obj, ray);
-            color = ComputeColor(hit, maxdepth);
+            color = startComputeColor(hit, maxdepth);
             cout << static_cast<int>(255.999 * color.x) << ' '
                  << static_cast<int>(255.999 * color.y) << ' '
                  << static_cast<int>(255.999 * color.z) << '\n';
