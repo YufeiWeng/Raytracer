@@ -325,18 +325,17 @@ vec3 ComputeColor(hit_record closest)
 
 vec3 startComputeColor(hit_record hit, int index) {
     hit_record h = hit;
-    if (h.t < 0) { return vec3(0, 0, 0);}
     vec3 finalcolor(0.0, 0.0, 0.0);
-    finalcolor = ComputeColor(hit);
-    Ray ray = h.p;  
-    int i = index - 1;
-    while (i > 0) {
+    
+    while (index > 0) {
+        finalcolor += ComputeColor(h);
+        Ray ray = h.p;
         Ray ref = reflect(h.normal, h.point, h.p);
         ref.ori = ref.ori + float(0.001) * ref.dir;
         hit_record nextBounce = Intersection(obj, ref);
         finalcolor += h.specularity*ComputeColor(nextBounce);
         h = nextBounce;
-        i -= 1;
+        index = index - 1;
     }
     return finalcolor;
 }
