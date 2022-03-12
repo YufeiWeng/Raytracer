@@ -245,7 +245,7 @@ float computeV(vec3& intP, vec4& lightDir) {
 Ray reflect(vec3& N, vec3& point, Ray& input) {
     Ray output;
     output.ori = point;
-    output.dir = input.dir - 2 * dot(input.dir, N) * N;
+    output.dir = input.dir - 2 * max(dot(input.dir, N),0.0f) * N;
     return output;
 }
 
@@ -256,7 +256,7 @@ vec3 ComputeColor(hit_record closest, int index)
 {
     vec3 finalcolor(0.0, 0.0, 0.0);
     if (index == 0) {
-        return vec3(0.0, 0.0, 0.0);
+        return vec3(0, 0, 0);
     }
     if (closest.t < 0)
     {
