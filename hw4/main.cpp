@@ -313,7 +313,7 @@ vec3 ComputeColor(hit_record closest, int index)
                 position = vec3(lightposn[4 * i], lightposn[4 * i + 1], lightposn[4 * i + 2]) / lightposn[4 * i + 3];
                 direction = normalize(position - intP);
                 myhalf = normalize(direction + eyedirn);
-                float dist = distance(closest.point, position);
+                float dist = distance(intP, position);
                 col = ComputeLight(direction, color, normal, myhalf, diffuse, specular, shininess) / (attenuation[0] + attenuation[1] * dist + attenuation[2] * powf(dist, 2));
             }
             finalcolor = finalcolor + col;
