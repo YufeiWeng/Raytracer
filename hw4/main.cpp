@@ -245,7 +245,7 @@ float computeV(vec3& intP, vec4& lightDir) {
 Ray reflect(vec3& N, vec3& point, Ray& input) {
     Ray output;
     output.ori = point;
-    output.dir = (input.dir - 2 * max(dot(input.dir, N),0.0f) * N);
+    output.dir = normalize(2 * dot(input.dir, N) * N - (input.dir));
     return output;
 }
 
@@ -363,7 +363,7 @@ int main(int argc, char *argv[])
             Ray ray(i+0.5, j+0.5);
             vec3 color(0.0, 0.0, 0.0);
             hit_record hit = Intersection(obj, ray);
-            color = startComputeColor(hit, 3);
+            color = ComputeColor(hit, maxdepth);
             cout << static_cast<int>(255.999 * color.x) << ' '
                  << static_cast<int>(255.999 * color.y) << ' '
                  << static_cast<int>(255.999 * color.z) << '\n';
