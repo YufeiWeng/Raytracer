@@ -31,7 +31,7 @@ void readfile(const char *filename)
     emission[0] = 0.0;emission[1] = 0.0;emission[2] = 0.0;
     shininess = 0.0;
     attenuation[0] = 1.0; attenuation[1] = 0.0; attenuation[2] = 0.0;
-
+    maxdepth = 5;
     string str, cmd;
     ifstream in;
     int i;
@@ -144,6 +144,10 @@ void readfile(const char *filename)
                     for (int i = 0; i < 3; i++) {
                         attenuation[i] = values[i];
                     }
+                }
+                else if (cmd == "maxdepth") {
+                    validinput = readvals(s, 1, values);
+                    maxdepth = values[0];
                 }
                 else if (cmd == "vertex")
                 {

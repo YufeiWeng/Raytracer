@@ -143,6 +143,7 @@ hit_record Intersection(const vector<object *> &objList, const Ray &ray)
     object *closest = nullptr;
     hit_record output;
     output.t = -1.0;
+    output.p = ray;
     for (int k = 0; k < objList.size(); k++)
     {
 
@@ -190,7 +191,6 @@ hit_record Intersection(const vector<object *> &objList, const Ray &ray)
             }
         }
     }
-    output.p = ray;
     
     return output;
 }
@@ -238,16 +238,29 @@ float computeV(vec3& intP, vec4& lightDir) {
             return 0.0;
         }
     }
-    
+}
+/*
+ *find reflected ray
+ */
+Ray reflect(vec3& N, vec3& point, Ray& input) {
+    Ray output;
+    output.ori = point;
+    output.dir = normalize(2 * dot((-input.dir), N) * N - (-input.dir));
+    // output.dir = normalize((point - input.ori) - 2 * max(dot((point - input.ori), N), 0.0f) * N);
 
+    // output.dir = input.dir - 2 * dot(input.dir, N) * N;
+    return output;
 }
 
 /*
  *compute color; need further implements
  */
-vec3 ComputeColor(hit_record closest)
+vec3 ComputeColor(hit_record closest, int index)
 {
     vec3 finalcolor(0.0, 0.0, 0.0);
+    if (index == 0) {
+        return vec3(0, 0, 0);
+    }
     if (closest.t < 0)
     {
         return finalcolor;
@@ -268,7 +281,8 @@ vec3 ComputeColor(hit_record closest)
             sphere *sph = (sphere *)closest.target;
             normal = sph->findNormal(closest.point); //need 
         }
-        normal = normalize(vec3(inverse(transpose(closest.target->_transform)) * vec4(normal, 0.0f)));
+        // normal = normalize(vec3(inverse(transpose(closest.target->_transform)) * vec4(normal, 0.0f)));
+        normal = normalize(inverse(transpose(glm::mat3(closest.target->_transform))) * normal);
         for (int i = 0; i < numused; i++)
         {
             vec3 eyedirn = normalize(closest.p.ori-intP); //???
@@ -299,7 +313,7 @@ vec3 ComputeColor(hit_record closest)
                 position = vec3(lightposn[4 * i], lightposn[4 * i + 1], lightposn[4 * i + 2]) / lightposn[4 * i + 3];
                 direction = normalize(position - intP);
                 myhalf = normalize(direction + eyedirn);
-                float dist = distance(closest.point, position);
+                float dist = distance(intP, position);
                 col = ComputeLight(direction, color, normal, myhalf, diffuse, specular, shininess) / (attenuation[0] + attenuation[1] * dist + attenuation[2] * powf(dist, 2));
             }
             finalcolor = finalcolor + col;
@@ -307,6 +321,12 @@ vec3 ComputeColor(hit_record closest)
         // cout<<finalcolor[0]<<finalcolor[1]<<finalcolor[2]<<endl;
         finalcolor = finalcolor + closest.target->_ambient + closest.target->_emission;
         // cout << finalcolor[0] << " " << finalcolor[1] << " " << finalcolor[2] << endl;
+        Ray ref = reflect(normal, intP, closest.p);
+        ref.ori = ref.ori + float(0.001) * ref.dir;
+        hit_record nextBounce = Intersection(obj, ref);
+        if (nextBounce.t>0.0){
+            finalcolor += closest.target->_specular * ComputeColor(nextBounce, index - 1);
+        }
 
         return finalcolor;
     }
@@ -349,7 +369,7 @@ int main(int argc, char *argv[])
             Ray ray(i+0.5, j+0.5);
             vec3 color(0.0, 0.0, 0.0);
             hit_record hit = Intersection(obj, ray);
-            color = ComputeColor(hit);
+            color = ComputeColor(hit, maxdepth);
             cout << static_cast<int>(255.999 * color.x) << ' '
                  << static_cast<int>(255.999 * color.y) << ' '
                  << static_cast<int>(255.999 * color.z) << '\n';
