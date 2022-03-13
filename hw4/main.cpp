@@ -245,7 +245,10 @@ float computeV(vec3& intP, vec4& lightDir) {
 Ray reflect(vec3& N, vec3& point, Ray& input) {
     Ray output;
     output.ori = point;
-    output.dir = input.dir - 2 * max(dot(input.dir, N),0.0f) * N;
+    output.dir = normalize(input.dir - 2 * max(dot(input.dir, N),0.0f) * N);
+    // output.dir = normalize((point - input.ori) - 2 * max(dot((point - input.ori), N), 0.0f) * N);
+
+    // output.dir = input.dir - 2 * dot(input.dir, N) * N;
     return output;
 }
 
@@ -278,7 +281,8 @@ vec3 ComputeColor(hit_record closest, int index)
             sphere *sph = (sphere *)closest.target;
             normal = sph->findNormal(closest.point); //need 
         }
-        normal = normalize(vec3(inverse(transpose(closest.target->_transform)) * vec4(normal, 0.0f)));
+        // normal = normalize(vec3(inverse(transpose(closest.target->_transform)) * vec4(normal, 0.0f)));
+        normal = normalize(inverse(transpose(glm::mat3(closest.target->_transform))) * normal);
         for (int i = 0; i < numused; i++)
         {
             vec3 eyedirn = normalize(closest.p.ori-intP); //???
@@ -321,8 +325,11 @@ vec3 ComputeColor(hit_record closest, int index)
         Ray ref = reflect(normal, closest.point, closest.p);
         ref.ori = ref.ori + float(0.001) * ref.dir;
         hit_record nextBounce = Intersection(obj, ref);
-        vec3 specularity = vec3(specular[0], specular[1], specular[2]);
-        return finalcolor + specularity * ComputeColor(nextBounce, index - 1);
+        if (nextBounce.t>0.0){
+            finalcolor += nextBounce.target->_specular * ComputeColor(nextBounce, index - 1);
+        }
+
+        return finalcolor;
     }
 }
 
