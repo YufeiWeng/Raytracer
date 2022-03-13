@@ -325,7 +325,7 @@ vec3 ComputeColor(hit_record closest, int index)
         ref.ori = ref.ori + float(0.001) * ref.dir;
         hit_record nextBounce = Intersection(obj, ref);
         if (nextBounce.t>0.0){
-            finalcolor += nextBounce.target->_specular * ComputeColor(nextBounce, index - 1);
+            finalcolor += closest.target->_specular * ComputeColor(nextBounce, index - 1);
         }
 
         return finalcolor;
