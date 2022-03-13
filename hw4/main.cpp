@@ -370,7 +370,7 @@ int main(int argc, char *argv[])
             Ray ray(i+0.5, j+0.5);
             vec3 color(0.0, 0.0, 0.0);
             hit_record hit = Intersection(obj, ray);
-            color = ComputeColor(hit, maxdepth);
+            color = ComputeColor(hit, 2);
             cout << static_cast<int>(255.999 * color.x) << ' '
                  << static_cast<int>(255.999 * color.y) << ' '
                  << static_cast<int>(255.999 * color.z) << '\n';
