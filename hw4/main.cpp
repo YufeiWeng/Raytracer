@@ -143,6 +143,7 @@ hit_record Intersection(const vector<object *> &objList, const Ray &ray)
     object *closest = nullptr;
     hit_record output;
     output.t = -1.0;
+    output.p = ray;
     for (int k = 0; k < objList.size(); k++)
     {
 
@@ -190,7 +191,6 @@ hit_record Intersection(const vector<object *> &objList, const Ray &ray)
             }
         }
     }
-    output.p = ray;
     
     return output;
 }
@@ -245,7 +245,7 @@ float computeV(vec3& intP, vec4& lightDir) {
 Ray reflect(vec3& N, vec3& point, Ray& input) {
     Ray output;
     output.ori = point;
-    output.dir = normalize(input.dir - 2 * max(dot(input.dir, N),0.0f) * N);
+    output.dir = normalize(2 * dot((-input.dir), N) * N - (-input.dir));
     // output.dir = normalize((point - input.ori) - 2 * max(dot((point - input.ori), N), 0.0f) * N);
 
     // output.dir = input.dir - 2 * dot(input.dir, N) * N;
@@ -321,8 +321,7 @@ vec3 ComputeColor(hit_record closest, int index)
         // cout<<finalcolor[0]<<finalcolor[1]<<finalcolor[2]<<endl;
         finalcolor = finalcolor + closest.target->_ambient + closest.target->_emission;
         // cout << finalcolor[0] << " " << finalcolor[1] << " " << finalcolor[2] << endl;
-
-        Ray ref = reflect(normal, closest.point, closest.p);
+        Ray ref = reflect(normal, intP, closest.p);
         ref.ori = ref.ori + float(0.001) * ref.dir;
         hit_record nextBounce = Intersection(obj, ref);
         if (nextBounce.t>0.0){
