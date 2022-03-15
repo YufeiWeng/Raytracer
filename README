@@ -1,8 +1,2 @@
 1. Yufei Weng. My partner: Zedian Zhang
 2. y8weng@ucsd.edu
-3. All images locate in a folder(same directory containing README) called "image result". Our code currently use PPM to output the result.
-   For convenience of viewing those pictures, I convert them from ppm to png by tools online. So for each output picture, there're one ppm file 
-   and one png file.
-4. 
-5. Windows
-6. There are many unclear part of the assignment. 
